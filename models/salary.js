@@ -1,0 +1,11 @@
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+let SalarySchema = new Schema({
+  date: {type: Date, required: true},
+  value: {type: Number, required: true},
+  userId: { type: Schema.Types.ObjectId, ref: 'User'},
+  projectId: { type: Schema.Types.ObjectId, ref: 'Project'}
+})
+
+module.exports = mongoose.model('Salary', SalarySchema)
