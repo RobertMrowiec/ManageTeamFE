@@ -10,6 +10,7 @@ exports.info = defaultResponse(req => {
 })
 
 exports.add = defaultResponse(req => {
+  req.body.howmany = req.body.amount
   return new Project(req.body).save()
 })
 

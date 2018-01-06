@@ -21,9 +21,21 @@ class Projects extends Component {
         <div>
           {projects.map(project =>
             <div key={project.name}>
-              <p> {project.name} </p>
-              <div key={project.value}>
-                <p> {project.value}</p>
+              <p> <b> Nazwa: {project.name} </b> </p>
+              <div key={project.peoples}>
+                <p> Ile osób pracuje: {project.peoples}</p>
+              </div>
+              <div key={project.amount}>
+                <p> Kwota: {project.amount}</p>
+              </div>
+              <div key={project.howmany}>
+                <p> Ile pozostało: {project.howmany}</p>
+              </div>
+              <div key={project.salaries}>
+                <p> Ilość wypłat: {project.salaries}</p>
+              </div>
+              <div>
+                <p> ------------</p>
               </div>
             </div>
           )}
