@@ -1,7 +1,6 @@
 import React from 'react';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import MobileTearSheet from '../../../MobileTearSheet';
 import {List, ListItem} from 'material-ui/List';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
@@ -25,6 +24,13 @@ class Index extends React.Component {
     const { classes } = this.props;
 
     return (
+        <List>
+            <ListItem primaryText="Inbox" leftIcon={<ContentInbox />} />
+            <ListItem primaryText="Starred" leftIcon={<ActionGrade />} />
+            <ListItem primaryText="Sent mail" leftIcon={<ContentSend />} />
+            <ListItem primaryText="Drafts" leftIcon={<ContentDrafts />} />
+            <ListItem primaryText="Inbox" leftIcon={<ContentInbox />} />
+        </List>
       <div className={classes.root}>
         <Typography type="display1" gutterBottom>
           Material-UI
