@@ -1,53 +1,40 @@
-import Users from './Users';
-import Home from './Home';
-import Projects from './Projects';
-import Salaries from './Salaries';
-import React, { Component } from 'react';
-import { render } from 'react-dom';
-import Button from 'material-ui/Button';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import AppBar from 'material-ui/AppBar';
+import React from 'react';
+import Typography from 'material-ui/Typography';
+import { withStyles } from 'material-ui/styles';
+import MobileTearSheet from '../../../MobileTearSheet';
+import {List, ListItem} from 'material-ui/List';
+import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
+import ContentSend from 'material-ui/svg-icons/content/send';
+import ContentDrafts from 'material-ui/svg-icons/content/drafts';
+import Divider from 'material-ui/Divider';
+import ActionInfo from 'material-ui/svg-icons/action/info';
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom';
+const styles = theme => ({
+  root: {
+    textAlign: 'center'
+  }
+});
 
+class Index extends React.Component {
+  state = {
+    open: false,
+  };
 
-class App extends Component {
- 
-  render () {
-    <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-      <AppBar title="My AppBar" />
-    </MuiThemeProvider>
+  render() {
+    const { classes } = this.props;
+
     return (
-      <Router>
-        <div className = "container">
-        <ul>
-            <li>
-              <Link to="/">Strona główna</Link>
-            </li>
-            <li>
-              <Link to="/users">Uzytkownicy</Link>
-            </li>
-            <li>
-              <Link to="/projects">Projekty</Link>
-            </li>
-            <li>
-              <Link to="/salaries">Wypłaty</Link>
-            </li>
-          </ul>
-        <Route exact path = "/" component = {Home} />
-        <Route path = "/users" component = {Users} />           
-        <Route path = "/projects" component = {Projects} />           
-        <Route path = "/salaries" component = {Salaries} />
-        </div>
-      </Router>
-    )
+      <div className={classes.root}>
+        <Typography type="display1" gutterBottom>
+          Material-UI
+        </Typography>
+        <Typography type="subheading" gutterBottom>
+          example project
+        </Typography>
+      </div>
+    );
   }
 }
 
-export default App;
+export default withStyles(styles)(Index);
