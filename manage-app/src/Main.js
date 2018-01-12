@@ -53,10 +53,7 @@ const styles = theme => ({
   },
   appBar: {
     position: 'absolute',
-    marginLeft: drawerWidth,
-    [theme.breakpoints.up('md')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
+    marginLeft: drawerWidth
   },
   container: {
     marginTop:'100%'
@@ -159,7 +156,7 @@ class App extends Component {
       return (
         <div>
           <div className={classes.appFrame}>
-            <AppBar className={classNames(classes.appBar, classes[`appBar-${anchor}`])}>
+            <AppBar title={<img src="https://unsplash.it/40/40"/>} className={classNames(classes.appBar, classes[`appBar-${anchor}`])}>
               <Toolbar>
                 <Typography type="title" color="inherit" noWrap>
                   Surprise.Design
