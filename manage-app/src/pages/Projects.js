@@ -16,7 +16,6 @@ class Projects extends Component {
     
     render(){
       const {projects} = this.state;
-
       return (
         <div>
           {projects.map(project =>

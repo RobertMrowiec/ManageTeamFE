@@ -4,10 +4,13 @@
   "private": true,
   "dependencies": {
     "material-ui": "next",
+    "material-ui-icons": "^1.0.0-beta.17",
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-scripts": "latest"
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "latest",
+    "react-tap-event-plugin": "^3.0.2"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -20,7 +20,7 @@ class Salaries extends Component {
       return (
         <div>
           {salaries.map(salary =>
-            <div key={salary.userId.name}>
+            <div key={salary.name}>
               <p> <b> Odbiorca: {salary.userId.name} </b> </p>
               <p> Projekt: {salary.projectId.name}</p> 
               <p> Kwota: {salary.value}</p>

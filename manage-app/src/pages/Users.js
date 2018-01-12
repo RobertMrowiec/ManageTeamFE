@@ -1,17 +1,4 @@
 import React, { Component } from 'react';
-import 'simple-react-button/styles.scss';
-import Salaries from './Salaries';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom';
-
-let addNew = () => {
-  <Router>
-    <Route path = "/salaries"  />
-  </Router>
-}
 
 class Users extends Component {
   constructor(){
@@ -31,7 +18,6 @@ class Users extends Component {
       const {users} = this.state;
       return (
         <div>
-        <button onClick = {addNew()}> Dodaj nowego uzytownika </button>
           {users.map(user =>
             <div key={user.name}>
               <p> {user.name} </p>
