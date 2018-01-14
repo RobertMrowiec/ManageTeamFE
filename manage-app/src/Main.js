@@ -16,7 +16,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import ChevronRightIcon from 'material-ui-icons/ChevronRight';
 import Divider from 'material-ui/Divider';
-import { ListItem, ListItemText } from 'material-ui/List';
+import { List, ListItem, ListItemText } from 'material-ui/List';
 import InboxIcon from 'material-ui-icons/Inbox';
 import Hidden from 'material-ui/Hidden';
 import {
@@ -30,8 +30,9 @@ import {
 // import AddSalaries from './pages/AddSalaries';
 // import AddProjects from './pages/AddProjects';
 import GetProjects from './pages/getProjects';
-// import Users from './pages/Users';
+import GetUsers from './pages/getUsers';
 import Home from './pages/Home';
+import GetSalaries from './pages/getSalaries';
 // import Projects from './pages/Projects';
 // import Salaries from './pages/Salaries';
 // import About from './pages/About';
@@ -63,7 +64,6 @@ const styles = theme => ({
       display: 'none',
     },
   },
-  drawerHeader: theme.mixins.toolbar,
   drawerPaper: {
     width: 250,
     [theme.breakpoints.up('md')]: {
@@ -83,6 +83,12 @@ const styles = theme => ({
       marginTop: 64,
     },
   },
+  list: {
+    width: 250,
+  },
+  menuButton: {
+    marginLeft: '-10px'
+  }
 });
 
 
@@ -99,6 +105,19 @@ const styles = theme => ({
 
 injectTapEventPlugin();
 
+const sideList = (
+  <div className={styles.list}>
+    <ListItem button component="a" href="users">
+      <ListItemText primary="Uzytkownicy" />
+    </ListItem>
+    <ListItem button component="a" href="projects">
+      <ListItemText primary="Projekty" />
+    </ListItem>
+    <ListItem button component="a" href="salaries">
+      <ListItemText primary="Wypłaty" />
+    </ListItem>
+  </div>
+)
 
 class App extends Component {
     constructor(props) {
@@ -106,9 +125,16 @@ class App extends Component {
         this.state = {
           isDrawerOpen: false,
           anchor: 'left',
-          mobileOpen: false
+          mobileOpen: false,
+          left: false
         }
     }
+    toggleDrawer = (open) => () => {
+      this.setState({
+        left: open,
+      });
+    };
+  
     handleToggle = () => this.setState({isDrawerOpen: true});
     closeDrawer = () => this.setState({ isDrawerOpen: false });
 
@@ -122,60 +148,56 @@ class App extends Component {
       this.setState({ mobileOpen: !this.state.mobileOpen });
     };
   
+    log = () => {
+      console.log('asd');
+    }
     render() {
       const { classes, theme } = this.props;
       const { anchor } = this.state;
 
       const drawer = (
-        <Hidden smDown implementation="css">
-          <div>
-            <div className={classes.drawerHeader} />
-              <Drawer
-                type="permanent"
-                className={classes.drawerHeader}
-                classes={{
-                  paper: classes.drawerPaper,
-                }}
-                anchor={anchor}
-              >
-                <Divider />
-                <ListItem button component="a" href="users">
-                  <ListItemText primary="Uzytkownicy" />
-                </ListItem>
-                <ListItem button component="a" href="projects">
-                  <ListItemText primary="Projekty" />
-                </ListItem>
-                <ListItem button component="a" href="salaries">
-                  <ListItemText primary="Wypłaty" />
-                </ListItem>
-              </Drawer>
+          <Drawer open={this.state.left} onClose={this.toggleDrawer(false)}>
+            <div
+              tabIndex={0}
+              role="button"
+              onClick={this.toggleDrawer(false)}
+              onKeyDown={this.toggleDrawer(false)}
+              style={{width:'155px'}}
+            >
+            {sideList}
             </div>
-        </Hidden>
-      );
+          </Drawer>
+      )
   
       return (
         <div>
           <div className={classes.appFrame}>
             <AppBar title={<img src="https://unsplash.it/40/40"/>} className={classNames(classes.appBar, classes[`appBar-${anchor}`])}>
               <Toolbar>
+                <IconButton
+                  color="contrast"
+                  aria-label="open drawer"
+                  className = {classNames(styles.menuButton)}
+                  onClick = {this.toggleDrawer(true)}
+                >
+                  <MenuIcon />
+                </IconButton>
                 <Typography type="title" color="inherit" noWrap>
                   Surprise.Design
                 </Typography>
               </Toolbar>
             </AppBar>
-
             {drawer}
-            
             <Router>
-              <div style={{marginTop:'70px', width:'2000px'}}>
+              <div style={{marginTop:'5%', width:'100%', marginLeft:'0.9%', marginRight:'0.9%'}}>
                 <Route exact path="/" component={Home} />
                 <Route path="/projects" component={GetProjects} />
-                {/* <Route path="/users" component={Users} /> */}
+                <Route path="/users" component={GetUsers} />
+                <Route path="/salaries" component={GetSalaries} />
                 {/* <Route path="/addUsers" component={AddUsers} />
                 <Route path="/addSalaries" component={AddSalaries} />
                 <Route path="/addProjects" component={AddProjects} />
-                <Route path="/projects" component={GetProjects} />
-                <Route path="/salaries" component={Salaries} /> */}
+                <Route path="/projects" component={GetProjects} /> */}
               </div>
             </Router>
 

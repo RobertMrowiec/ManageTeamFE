@@ -5,7 +5,6 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
-import ModeEditIcon from 'material-ui-icons/ModeEdit';
 
 const styles = theme => ({
   root: {
@@ -16,26 +15,23 @@ const styles = theme => ({
   table: {
     minWidth: 700,
   },
-  button: {
-    marginRight: theme.spacing.unit,
-  }  
 });
 
-class GetProjects extends Component {
+class GetUsers extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      projects: []
+      users: []
     }
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/projects')
+    fetch('http://localhost:8030/api/users')
       .then( response => response.json())
-      .then( data => this.setState({projects: data}))
+      .then( data => this.setState({users: data}))
   }
   render () {
-    const {projects} = this.state;
+    const {users} = this.state;
       
     return (
       <div>
@@ -49,22 +45,21 @@ class GetProjects extends Component {
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>Nazwa</TableCell>
-              <TableCell>Kwota</TableCell>
-              <TableCell>Ile pozostało</TableCell>
-              <TableCell>Ilość programistów</TableCell>
-              <TableCell>Ilość wypłat</TableCell>
+              <TableCell>Imie</TableCell>
+              <TableCell>Nazwisko</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Ilość projektów</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {projects.map((project, i) => {
+            {users.map((user, i) => {
               return (
                 <TableRow key={i}>
-                  <TableCell>{project.name}</TableCell>
-                  <TableCell>{project.amount}</TableCell>
-                  <TableCell>{project.howmany}</TableCell>
-                  <TableCell>{project.peoples}</TableCell>
-                  <TableCell>{project.salaries}</TableCell>
+                  <TableCell>{i+1}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.surname}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.projects.length}</TableCell>
                 </TableRow>
               );
             })}
@@ -76,4 +71,4 @@ class GetProjects extends Component {
   }
 }
 
-export default withStyles(styles)(GetProjects);
+export default withStyles(styles)(GetUsers);

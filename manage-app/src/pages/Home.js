@@ -14,13 +14,7 @@ class Home extends Component {
   render(){
     return (
       <div>
-        <MuiThemeProvider>
-          <TextField
-            hintText="Wpisz email"
-            floatingLabelText="Email"
-            onChange = {(event,newValue) => this.setState({username:newValue})}
-          />  
-        </MuiThemeProvider>
+        <h1>Strona główna</h1>
       </div>
       
     )
