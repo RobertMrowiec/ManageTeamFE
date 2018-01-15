@@ -5,7 +5,7 @@ let ProjectSchema = new Schema({
   name: {type: String, required: true},
   amount: {type: Number, required: true},
   peoples: {type: Number, default: 0},
-  howmany: Number,
+  howmany: {type: Number, default: 0},
   salaries: {type: Number, default: 0},
 
 })

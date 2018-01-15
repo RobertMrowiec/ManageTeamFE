@@ -28,14 +28,11 @@ import {
 
 //  import AddUsers from './pages/AddUsers';
 // import AddSalaries from './pages/AddSalaries';
-// import AddProjects from './pages/AddProjects';
+import AddProjects from './pages/AddProjects';
 import GetProjects from './pages/getProjects';
 import GetUsers from './pages/getUsers';
 import Home from './pages/Home';
 import GetSalaries from './pages/getSalaries';
-// import Projects from './pages/Projects';
-// import Salaries from './pages/Salaries';
-// import About from './pages/About';
 
 const drawerWidth = 240;
 
@@ -194,10 +191,9 @@ class App extends Component {
                 <Route path="/projects" component={GetProjects} />
                 <Route path="/users" component={GetUsers} />
                 <Route path="/salaries" component={GetSalaries} />
-                {/* <Route path="/addUsers" component={AddUsers} />
-                <Route path="/addSalaries" component={AddSalaries} />
                 <Route path="/addProjects" component={AddProjects} />
-                <Route path="/projects" component={GetProjects} /> */}
+                {/* <Route path="/salaries/add" component={AddSalaries} /> */}
+                {/* <Route path="/users/add" component={AddUsers} /> */}
               </div>
             </Router>
 

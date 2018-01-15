@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
@@ -40,7 +41,7 @@ class GetProjects extends Component {
     return (
       <div>
         <div style = {{marginLeft: '95%', marginBottom: '0.5%'}}>
-          <Button fab mini color="primary" aria-label="add" className={styles.button}>
+          <Button fab mini color="primary" aria-label="add" className={styles.button} component={Link} to="/addProjects">
             <AddIcon />
           </Button>
         </div>
@@ -60,6 +61,7 @@ class GetProjects extends Component {
             {projects.map((project, i) => {
               return (
                 <TableRow key={i}>
+                  <TableCell>{i + 1}</TableCell>
                   <TableCell>{project.name}</TableCell>
                   <TableCell>{project.amount}</TableCell>
                   <TableCell>{project.howmany}</TableCell>

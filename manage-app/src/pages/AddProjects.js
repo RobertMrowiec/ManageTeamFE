@@ -2,15 +2,12 @@ import React, {Component} from 'react';
 import TextField from 'material-ui/TextField'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Divider from 'material-ui/Divider';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import RaisedButton from 'material-ui/RaisedButton';
+import MenuItem from 'material-ui/Menu/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
+import Button from 'material-ui/Button';
+import { Link } from 'react-router-dom';
 
-let style = {
-  button : {
-    margin: 30
-  },
+const style = {
   div: {
     margin: 'auto',
     width: '15%',
@@ -22,14 +19,14 @@ let style = {
   }
 }
 
+
 class AddProjects extends Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
-      isDrawerOpen: false,
+      openError: false,
       name: '',
-      amount: ''
     }
   }
 
@@ -40,6 +37,7 @@ class AddProjects extends Component {
   handleRequestClose = () => {
     this.setState({
       open: false,
+      openError: false
     });
   };
 
@@ -48,6 +46,13 @@ class AddProjects extends Component {
       open: true,
     });
   };
+  
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
+
 
   render(){
     let change = () => {
@@ -56,14 +61,19 @@ class AddProjects extends Component {
       });
     }
 
+    let changeError = () => {
+      this.setState({
+        openError: true,
+      });
+    }
+
     let object = {
       name: this.state.name,
       amount: this.state.amount
     }
-    console.log(this.state);
     
     let doSomething = function(){
-      console.log('asd');
+      console.log('asd', object);      
       fetch('http://localhost:8030/api/projects',
         {
           headers: {
@@ -73,42 +83,50 @@ class AddProjects extends Component {
           method: "POST",
           body: JSON.stringify(object)
         }
-      ).then(() => {
-        change()
+      ).then(response => {
+        response.status === 400 ? changeError() : change()
       })
     }
 
     return (
       <div style={style.div}>
-        <MuiThemeProvider>
-
           <TextField
-            hintText="Nazwa projektu"
-            floatingLabelText="Nazwa projektu"
-            onChange = {(event,newValue) => this.setState({name:newValue})}
+            id="name"
+            label="Nazwa projektu"
+            placeholder="Np.BPC"
+            margin="normal"
+            onChange={this.handleChange('name')}
           />
-          <TextField
-            hintText="Kwota projektu"
-            floatingLabelText="Kwota projektu"
-            type='Number'
-            onChange = {(event,newValue) => this.setState({amount:newValue})}
-          />
-
-
-          <br/>
-          <br/>
-
-
-          <RaisedButton label="Dodaj projekt" primary={true} style={style.button} onClick= {doSomething}/>
           
+          <TextField
+            id="number"
+            label="Kwota"
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            margin="normal"
+            onChange={this.handleChange('amount')}
+
+          />
+          
+          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething} component={Link} to="/projects">
+            Dodaj projekt
+          </Button>
+      
           <Snackbar
             open={this.state.open}
             message="Dodano projekt"
-            autoHideDuration={4000}
-            onRequestClose={this.handleRequestClose}
-          /> 
+            autoHideDuration={2000}
+            onClose={this.handleRequestClose}
+          />
 
-        </MuiThemeProvider>
+          <Snackbar
+            open={this.state.openError}
+            message="Bląd podczas dodawania"
+            autoHideDuration={2000}
+            onClose={this.handleRequestClose}
+          />
       </div>
     )
   }

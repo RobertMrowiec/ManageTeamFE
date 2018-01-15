@@ -5,6 +5,7 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
+import { Link } from 'react-router-dom'
 
 const styles = theme => ({
   root: {
@@ -36,7 +37,7 @@ class GetUsers extends Component {
     return (
       <div>
         <div style = {{marginLeft: '95%', marginBottom: '0.5%'}}>
-          <Button fab mini color="primary" aria-label="add" className={styles.button}>
+          <Button fab mini color="primary" aria-label="add" className={styles.button} component={Link} to="/users/add">
             <AddIcon />
           </Button>
         </div>
