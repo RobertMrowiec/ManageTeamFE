@@ -5,7 +5,8 @@ import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/Menu/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { log } from 'util';
 
 const style = {
   div: {
@@ -27,12 +28,9 @@ class AddProjects extends Component {
       open: false,
       openError: false,
       name: '',
+      redirect: false
     }
   }
-
-  handleChange = (event, index, projectId) => this.setState({projectId});
-  handleChangeUser = (event, index, userId) => this.setState({userId});
-
 
   handleRequestClose = () => {
     this.setState({
@@ -41,12 +39,6 @@ class AddProjects extends Component {
     });
   };
 
-  handleClick = () => {
-    this.setState({
-      open: true,
-    });
-  };
-  
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
@@ -55,13 +47,22 @@ class AddProjects extends Component {
 
 
   render(){
-    let change = () => {
-        this.setState({
-          open: true,
-      });
+    const { redirect } = this.state
+
+    if (redirect) {
+      return (
+        <Redirect to={{pathname: '/projects' }}/>
+      )
     }
 
-    let changeError = () => {
+    let changeSnackBar = () => {
+      this.setState({
+        open: true,
+      });
+      setTimeout(() => {this.setState({redirect: true})} ,1500)
+    }
+
+    let changeSnackBarToError = () => {
       this.setState({
         openError: true,
       });
@@ -72,8 +73,7 @@ class AddProjects extends Component {
       amount: this.state.amount
     }
     
-    let doSomething = function(){
-      console.log('asd', object);      
+    let doSomething = () => {
       fetch('http://localhost:8030/api/projects',
         {
           headers: {
@@ -84,8 +84,12 @@ class AddProjects extends Component {
           body: JSON.stringify(object)
         }
       ).then(response => {
-        response.status === 400 ? changeError() : change()
-      })
+        if (!response.ok){
+          throw Error(response.statusText)
+        }
+        return response
+      }).then(changeSnackBar)
+        .catch(changeSnackBarToError)
     }
 
     return (
@@ -103,14 +107,13 @@ class AddProjects extends Component {
             label="Kwota"
             type="number"
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
             margin="normal"
             onChange={this.handleChange('amount')}
-
           />
           
-          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething} component={Link} to="/projects">
+          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
             Dodaj projekt
           </Button>
       

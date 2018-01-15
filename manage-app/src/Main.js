@@ -19,6 +19,7 @@ import Divider from 'material-ui/Divider';
 import { List, ListItem, ListItemText } from 'material-ui/List';
 import InboxIcon from 'material-ui-icons/Inbox';
 import Hidden from 'material-ui/Hidden';
+import {browserHistory} from 'react-router';
 import {
   BrowserRouter as Router,
   Route,

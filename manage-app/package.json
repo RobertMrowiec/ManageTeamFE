@@ -8,6 +8,7 @@
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-redirect": "^1.0.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "latest",
     "react-tap-event-plugin": "^3.0.2"
