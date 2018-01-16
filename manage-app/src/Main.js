@@ -27,10 +27,9 @@ import {
 } from 'react-router-dom';  
 
 
-//  import AddUsers from './pages/AddUsers';
-// import AddSalaries from './pages/AddSalaries';
-import AddProjects from './pages/AddProjects';
 import GetProjects from './pages/getProjects';
+import AddProjects from './pages/AddProjects';
+import EditProjects from './pages/EditProjects';
 import GetUsers from './pages/getUsers';
 import Home from './pages/Home';
 import GetSalaries from './pages/getSalaries';
@@ -88,18 +87,6 @@ const styles = theme => ({
     marginLeft: '-10px'
   }
 });
-
-
-
-// import AddUsers from './pages/AddUsers';
-// import AddSalaries from './pages/AddSalaries';
-// import AddProjects from './pages/AddProjects';
-// import GetProjects from './pages/getProjects';
-// import Users from './pages/Users';
-// import Home from './pages/Home';
-// import Projects from './pages/Projects';
-// import Salaries from './pages/Salaries';
-// import About from './pages/About';
 
 injectTapEventPlugin();
 
@@ -193,6 +180,7 @@ class App extends Component {
                 <Route path="/users" component={GetUsers} />
                 <Route path="/salaries" component={GetSalaries} />
                 <Route path="/addProjects" component={AddProjects} />
+                <Route path="/editProjects/:id" component={EditProjects} />
                 {/* <Route path="/salaries/add" component={AddSalaries} /> */}
                 {/* <Route path="/users/add" component={AddUsers} /> */}
               </div>

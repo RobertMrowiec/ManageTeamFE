@@ -19,5 +19,10 @@ exports.delete = defaultResponse(req => {
 })
 
 exports.update = defaultResponse(req => {
-  return Project.findByIdAndUpdate(req.params.id, req.body, {new: true}).exec()
+  return Project.findById(req.params.id).exec().then(found => {
+    if (req.body.amount !== found.amount) req.body.howmany = req.body.amount - (found.amount - found.howmany)
+    return console.log('I`ve got an update object');
+  }).then(() => {
+    Project.findByIdAndUpdate(req.params.id, req.body, {new: true}).exec()
+  })
 })

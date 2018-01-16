@@ -42,8 +42,11 @@ class GetProjects extends Component {
     }
   }
 
+  updateFunction (project, e) {
+    console.log('asd');
+  }
+
   deleteFunction (project, e) {
-    console.log(project._id);
     fetch('http://localhost:8030/api/projects/' + project._id,{
       method: 'delete'
     }).then(() => {
@@ -102,7 +105,7 @@ class GetProjects extends Component {
                   <TableCell>
 
                     {/* edycja */}
-                    <Button fab mini color="primary" aria-label="add" style={{width:'35px', height:'23px'}} component={Link} to="/addProjects">
+                    <Button fab mini color="primary" aria-label="add" style={{width:'35px', height:'23px'}} href={'/editProjects/' +`${project._id}`}>
                       <ModeEditIcon style = {{width:'60%', height:'60%'}}/>
                     </Button>
 
@@ -121,8 +124,6 @@ class GetProjects extends Component {
                   <Dialog
                     open={this.state.openDialog}
                     onClose={this.handleClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
                   >
                   <DialogTitle>{"Czy na pewno chcesz usunąć ten projekt?"}</DialogTitle>
                   <DialogActions>

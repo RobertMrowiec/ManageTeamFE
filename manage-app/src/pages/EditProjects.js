@@ -6,7 +6,6 @@ import MenuItem from 'material-ui/Menu/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
 import { Link, Redirect } from 'react-router-dom';
-import { log } from 'util';
 
 const style = {
   div: {
@@ -28,10 +27,21 @@ class AddProjects extends Component {
       open: false,
       openError: false,
       name: '',
-      redirect: false
+      amount: '',
+      redirect: false,
     }
   }
 
+  componentDidMount() {
+    fetch('http://localhost:8030/api/projects/' + this.props.match.params.id)
+      .then( response => response.json())
+      .then( data => this.setState({
+        name: data.name,
+        amount: data.amount
+      }))
+  }
+
+  
   handleRequestClose = () => {
     this.setState({
       open: false,
@@ -59,7 +69,7 @@ class AddProjects extends Component {
       this.setState({
         open: true,
       });
-      setTimeout(() => {this.setState({redirect: true})} ,1000)
+      setTimeout(() => {this.setState({redirect: true})}, 1000)
     }
 
     let changeSnackBarToError = () => {
@@ -73,14 +83,14 @@ class AddProjects extends Component {
       amount: this.state.amount
     }
     
-    let doSomething = () => {
-      fetch('http://localhost:8030/api/projects',
+    let Edit = () => {
+      fetch('http://localhost:8030/api/projects/' + this.props.match.params.id,
         {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          method: "POST",
+          method: "PUT",
           body: JSON.stringify(object)
         }
       ).then(response => {
@@ -91,13 +101,18 @@ class AddProjects extends Component {
       }).then(changeSnackBar)
         .catch(changeSnackBarToError)
     }
+    
+    let Cancel = () => {
+     {this.setState({redirect: true})}
+    }
 
     return (
+      
       <div style={style.div}>
           <TextField
             id="name"
-            label="Nazwa projektu"
-            placeholder="Np.BPC"
+            label= 'Nazwa projektu'
+            placeholder= {this.state.name}
             margin="normal"
             onChange={this.handleChange('name')}
           />
@@ -109,24 +124,27 @@ class AddProjects extends Component {
             InputLabelProps={{
               shrink: true
             }}
+            placeholder= {this.state.amount}
             margin="normal"
             onChange={this.handleChange('amount')}
           />
           
-          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
-            Dodaj projekt
+          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Cancel}>
+            Cofnij
           </Button>
-      
+          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>
+            Edytuj
+          </Button>
           <Snackbar
             open={this.state.open}
-            message="Dodano projekt"
+            message="Edytowano projekt"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
           />
 
           <Snackbar
             open={this.state.openError}
-            message="Bląd podczas dodawania"
+            message="Bląd podczas edycji"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
           />
