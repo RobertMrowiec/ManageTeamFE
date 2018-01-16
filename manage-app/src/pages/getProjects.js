@@ -8,18 +8,24 @@ import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import DeleteIcon from 'material-ui-icons/Delete';
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from 'material-ui/Dialog';
 
 const styles = theme => ({
   root: {
     width: '100%',
     marginTop: theme.spacing.unit * 3,
-    overflowX: 'auto',
+    overflowX: 'auto'
   },
   table: {
-    minWidth: 700,
+    minWidth: 700
   },
   button: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing.unit
   },
   buttonEdit: {
     width: '30px',
@@ -27,20 +33,12 @@ const styles = theme => ({
   }
 });
 
-// let deleteFunction = (project, e) => {
-//   console.log(project._id);
-//   fetch('http://localhost:8030/api/projects/' + project._id,{
-//     method: 'delete'
-//   }).then(() => {
-//     this.state.projects = this.state.projects.filter(f => f._id !== project._id)
-//   })
-// }
-
 class GetProjects extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      projects: []
+      projects: [],
+      openDialog: false
     }
   }
 
@@ -49,9 +47,8 @@ class GetProjects extends Component {
     fetch('http://localhost:8030/api/projects/' + project._id,{
       method: 'delete'
     }).then(() => {
-      this.state.projects = this.state.projects.filter(f => f._id !== project._id)
-      console.log(this.state.projects);
-      
+      this.setState({projects: this.state.projects.filter(f => f._id !== project._id)});
+      this.setState({openDialog: false})
     })
   }
 
@@ -60,6 +57,14 @@ class GetProjects extends Component {
       .then( response => response.json())
       .then( data => this.setState({projects: data}))
   }
+  handleOpen = () => {
+    this.setState({ openDialog: true });
+  };
+
+  handleClose = () => {
+    this.setState({ openDialog: false });
+  };
+
   render () {
     const {projects} = this.state;
       
@@ -89,33 +94,55 @@ class GetProjects extends Component {
               return (
                 <TableRow key={i}>
                   <TableCell>{i + 1}</TableCell>
-                  <TableCell>{project.name}</TableCell>
+                  <TableCell>{project.name}</TableCell> 
                   <TableCell>{project.amount}</TableCell>
                   <TableCell>{project.howmany}</TableCell>
                   <TableCell>{project.peoples}</TableCell>
                   <TableCell>{project.salaries}</TableCell>
                   <TableCell>
-                    {/* edycja */}
 
+                    {/* edycja */}
                     <Button fab mini color="primary" aria-label="add" style={{width:'35px', height:'23px'}} component={Link} to="/addProjects">
                       <ModeEditIcon style = {{width:'60%', height:'60%'}}/>
                     </Button>
 
                   </TableCell>
                   <TableCell>
+                    
                     {/* usuwanie  */}
 
-                    <Button fab mini color="primary" aria-label="add" style={{width:'35px', height:'23px'}} onClick={(e) => this.deleteFunction(project, e)}>
+                    <Button fab mini color="primary" aria-label="add" style={{width:'35px', height:'23px'}} onClick={this.handleOpen} >
                       <DeleteIcon style = {{width:'60%', height:'60%'}}/>
                     </Button>
 
                   </TableCell>
+
+
+                  <Dialog
+                    open={this.state.openDialog}
+                    onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                  <DialogTitle>{"Czy na pewno chcesz usunąć ten projekt?"}</DialogTitle>
+                  <DialogActions>
+                    <Button onClick={this.handleClose} color="primary">
+                      Anuluj
+                    </Button>
+                    <Button onClick={(e) => this.deleteFunction(project, e)} color="accent" autoFocus>
+                      Usuń
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+
+
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
       </Paper>
+      
       </div>
     );
   }
