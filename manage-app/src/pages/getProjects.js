@@ -113,8 +113,7 @@ class GetProjects extends Component {
                   <TableCell>
                     
                     {/* usuwanie  */}
-
-                    <Button fab mini color="primary" aria-label="add" style={{width:'35px', height:'23px'}} onClick={this.handleOpen} >
+                    <Button fab mini color="accent" aria-label="add" style={{width:'35px', height:'23px'}} onClick={this.handleOpen} >
                       <DeleteIcon style = {{width:'60%', height:'60%'}}/>
                     </Button>
 
