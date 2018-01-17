@@ -31,17 +31,9 @@ const styles = {
   }
 };
 
-const tags = [
-  'material-ui',
-  'google-material',
-  'react-components',
-  'react',
-  'javascript',
-  'material-design',
-  'material',
-];
+const tab = ['asd']
 
-class AddUser extends React.Component {
+class EditUser extends React.Component {
   constructor(props) {
     super(props);
       this.state = {    
@@ -51,15 +43,24 @@ class AddUser extends React.Component {
         surname:'',
         email:'',
         projects: [],
-        values: [],
-        tag: new Set()
+        values: []
       };
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/projects')
+    fetch('http://localhost:8030/api/users/' + this.props.match.params.id)
       .then( response => response.json())
-      .then( data => this.setState({values: data}))
+      .then( data => this.setState({
+        name: data.name,
+        surname: data.surname,
+        email: data.email,
+        projects: data.projects
+      }))
+      .then(() => {
+        fetch('http://localhost:8030/api/projects')
+          .then( response => response.json())
+          .then( projectData => this.setState({values: projectData}))
+      })
   }
 
   handleRequestClose = () => {
@@ -98,7 +99,7 @@ class AddUser extends React.Component {
       this.setState({
         open: true,
       });
-      setTimeout(() => {this.setState({redirect: true})}, 1000)
+      setTimeout(() => {this.setState({redirect: true})} ,1000)
     }
 
     let changeSnackBarToError = () => {
@@ -113,7 +114,29 @@ class AddUser extends React.Component {
       email: this.state.email,
       projects: this.state.projects
     }
-
+    let Edit = () => {
+      fetch('http://localhost:8030/api/users/' + this.props.match.params.id,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "PUT",
+          body: JSON.stringify(object)
+        }
+      ).then(response => {
+        if (!response.ok){
+          throw Error(response.statusText)
+        }
+        return response
+      }).then(changeSnackBar)
+        .catch(changeSnackBarToError)
+    }
+    
+    let Cancel = () => {
+     {this.setState({redirect: true})}
+    }
+    
     let doSomething = () => {
       fetch('http://localhost:8030/api/users',
         {
@@ -132,37 +155,41 @@ class AddUser extends React.Component {
       }).then(changeSnackBar)
         .catch(changeSnackBarToError)
     }
-
     return (
       <div style={styles.div}>
+
         <TextField
           id="name"
           label="Imie"
-          placeholder="Np. Jan"
+          placeholder={this.state.name}
           margin="normal"
           onChange={this.handleChange('name')}
         />
+
         <TextField
           id="surname"
           label="Nazwisko"
-          placeholder="Np. Kowalski"
+          placeholder={this.state.surname}
           margin="normal"
           onChange={this.handleChange('surname')}
         />
+
         <TextField
           id="email"
           label="Email"
-          placeholder="Np. kowalski@gmail.com"
+          placeholder={this.state.email}
           margin="normal"
           onChange={this.handleChange('email')}
         />
+
         <FormControl style={styles.formControl}>
+
         <InputLabel htmlFor="name-multiple">Projekty</InputLabel>
           <Select
             multiple
             value={this.state.projects}
             onChange={this.handleProjectChange}
-            input={<Input id="name-multiple" />}
+            input={<Input id="name-multiple"/>}
             style={{maxWidth:"200px", minWidth: "200px"}}
           >
             {this.state.values.map(value => (
@@ -175,27 +202,30 @@ class AddUser extends React.Component {
             ))}
           </Select>
         </FormControl>
-
-        <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
-            Dodaj projekt
+          
+          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Cancel}>
+            Cofnij
           </Button>
-      
+          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>
+            Edytuj
+          </Button>
+
           <Snackbar
             open={this.state.open}
-            message="Dodano uzytkownika"
+            message="Edytowano projekt"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
           />
 
           <Snackbar
             open={this.state.openError}
-            message="Błąd podczas dodawania"
+            message="Bląd podczas edycji"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
           />
       </div>
-    );
+    )
   }
 }
 
-export default (AddUser);
+export default EditUser;

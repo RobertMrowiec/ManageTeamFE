@@ -20,7 +20,6 @@ const style = {
   }
 }
 
-
 class AddProjects extends Component {
   constructor(props) {
     super(props);

@@ -31,6 +31,8 @@ import GetProjects from './pages/getProjects';
 import AddProjects from './pages/AddProjects';
 import EditProjects from './pages/EditProjects';
 import GetUsers from './pages/getUsers';
+import AddUsers from './pages/AddUsers';
+import EditUsers from './pages/EditUsers';
 import Home from './pages/Home';
 import GetSalaries from './pages/getSalaries';
 
@@ -92,13 +94,13 @@ injectTapEventPlugin();
 
 const sideList = (
   <div className={styles.list}>
-    <ListItem button component="a" href="users">
+    <ListItem button component="a" href="/users">
       <ListItemText primary="Uzytkownicy" />
     </ListItem>
-    <ListItem button component="a" href="projects">
+    <ListItem button component="a" href="/projects">
       <ListItemText primary="Projekty" />
     </ListItem>
-    <ListItem button component="a" href="salaries">
+    <ListItem button component="a" href="/salaries">
       <ListItemText primary="Wypłaty" />
     </ListItem>
   </div>
@@ -177,10 +179,13 @@ class App extends Component {
               <div style={{marginTop:'5%', width:'100%', marginLeft:'0.9%', marginRight:'0.9%'}}>
                 <Route exact path="/" component={Home} />
                 <Route path="/projects" component={GetProjects} />
-                <Route path="/users" component={GetUsers} />
-                <Route path="/salaries" component={GetSalaries} />
                 <Route path="/addProjects" component={AddProjects} />
                 <Route path="/editProjects/:id" component={EditProjects} />
+                <Route path="/users" component={GetUsers} />
+                <Route path="/addUsers" component={AddUsers} />
+                <Route path="/editUsers/:id" component={EditUsers} />
+                <Route path="/salaries" component={GetSalaries} />
+
                 {/* <Route path="/salaries/add" component={AddSalaries} /> */}
                 {/* <Route path="/users/add" component={AddUsers} /> */}
               </div>
