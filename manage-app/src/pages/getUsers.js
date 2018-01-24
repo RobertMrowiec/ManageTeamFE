@@ -107,13 +107,13 @@ class GetUsers extends Component {
                   <TableCell>
 
                     {/* usuwanie  */}
-                    <Button fab mini color="accent" aria-label="add" style={{width:'35px', height:'23px'}} onClick={this.handleOpen} >
+                    <Button fab mini color="accent" aria-label="add" style={{width:'35px', height:'23px'}} onClick={ () => this.deleteFunction(user)} >
                       <DeleteIcon style = {{width:'60%', height:'60%'}}/>
                     </Button>
 
                   </TableCell>
 
-                  <Dialog
+                  {/* <Dialog
                     open={this.state.openDialog}
                     onClose={this.handleClose}
                   >
@@ -126,7 +126,7 @@ class GetUsers extends Component {
                       Usuń
                     </Button>
                   </DialogActions>
-                </Dialog>
+                </Dialog> */}
 
 
                 </TableRow>

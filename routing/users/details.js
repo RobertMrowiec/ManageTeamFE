@@ -25,5 +25,8 @@ exports.delete = defaultResponse(req => {
 })
 
 exports.update = defaultResponse(req => {
-  return User.findByIdAndUpdate(req.params.id, req.body, {new: true}).exec()
+  let tab = []
+  return User.findById(req.params.id).exec().then(found => {
+    return User.findByIdAndUpdate(req.params.id, req.body, {new: true}).exec()
+  })
 })

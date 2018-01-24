@@ -7,6 +7,8 @@ import Input, { InputLabel } from 'material-ui/Input';
 import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
 import { Redirect } from 'react-router-dom';
+import Checkbox from 'material-ui/Checkbox';
+import { ListItemText } from 'material-ui/List';
 
 const styles = {
   container: {
@@ -32,13 +34,9 @@ const styles = {
 };
 
 const tags = [
-  'material-ui',
-  'google-material',
-  'react-components',
-  'react',
-  'javascript',
-  'material-design',
-  'material',
+  {name:'material-ui', _id:'1'},
+  {name:'material-design', _id:'2'},
+  {name:'material', _id:'3'}
 ];
 
 class AddUser extends React.Component {
@@ -84,6 +82,10 @@ class AddUser extends React.Component {
     });
   };
 
+  handleTagChange = event => {
+    this.setState({ tag: new Set(event.target.value) });
+  };
+
   render() {
 
     const { redirect } = this.state
@@ -111,10 +113,12 @@ class AddUser extends React.Component {
       name: this.state.name,
       surname: this.state.surname,
       email: this.state.email,
-      projects: this.state.projects
+      projects: this.state.tag
     }
 
     let doSomething = () => {
+      let array = Array.from(this.state.tag);
+      object.projects = array
       fetch('http://localhost:8030/api/users',
         {
           headers: {
@@ -156,25 +160,25 @@ class AddUser extends React.Component {
           margin="normal"
           onChange={this.handleChange('email')}
         />
-        <FormControl style={styles.formControl}>
-        <InputLabel htmlFor="name-multiple">Projekty</InputLabel>
-          <Select
-            multiple
-            value={this.state.projects}
-            onChange={this.handleProjectChange}
-            input={<Input id="name-multiple" />}
-            style={{maxWidth:"200px", minWidth: "200px"}}
-          >
-            {this.state.values.map(value => (
-              <MenuItem
-                key={value.name}
-                value={value._id}
-              >
-                {value.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+
+
+        <FormControl style={{minWidth:166, maxWidth: 166}}>
+        <InputLabel htmlFor="tag-multiple">Projekty</InputLabel>
+        <Select
+          multiple
+          value={[...this.state.tag]}
+          onChange={this.handleTagChange}
+          input={<Input id="tag-multiple" />}
+          renderValue={selected => selected.join(', ')}
+        >
+          {this.state.values.map(tag => (
+            <MenuItem key={tag.id} value={tag._id}>
+              <Checkbox checked={this.state.tag.has(tag._id)} />
+              <ListItemText primary={tag.name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
         <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
             Dodaj projekt

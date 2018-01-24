@@ -70,7 +70,6 @@ class GetProjects extends Component {
 
   render () {
     const {projects} = this.state;
-      
     return (
       <div>
         <div style = {{marginLeft: '95%', marginBottom: '0.5%'}}>
@@ -113,28 +112,28 @@ class GetProjects extends Component {
                   <TableCell>
                     
                     {/* usuwanie  */}
-                    <Button fab mini color="accent" aria-label="add" style={{width:'35px', height:'23px'}} onClick={this.handleOpen} >
+                    <Button fab mini color="accent" aria-label="add" style={{width:'35px', height:'23px'}} onClick={() => {this.deleteFunction(project)}} >
                       <DeleteIcon style = {{width:'60%', height:'60%'}}/>
                     </Button>
 
                   </TableCell>
 
-
-                  <Dialog
+                  {/* <Dialog
                     open={this.state.openDialog}
                     onClose={this.handleClose}
                   >
-                  <DialogTitle>{"Czy na pewno chcesz usunąć ten projekt?"}</DialogTitle>
-                  <DialogActions>
-                    <Button onClick={this.handleClose} color="primary">
-                      Anuluj
-                    </Button>
-                    <Button onClick={(e) => this.deleteFunction(project, e)} color="accent" autoFocus>
-                      Usuń
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-
+                    <DialogTitle>{"Czy na pewno chcesz usunąć ten projekt?"}</DialogTitle>
+                    <DialogActions>
+                      <Button onClick={this.handleClose} color="primary">
+                        Anuluj
+                      </Button>
+                      <Button onClick={() => console.log(project._id)
+                      } color="accent" autoFocus>
+                        Usuń
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                  */}
 
                 </TableRow>
               );
