@@ -1,9 +1,31 @@
 const Salary = require('../../models/salary')
 const Project = require('../../models/project')
 const { defaultResponse } = require('../common')
-
+const moment = require('moment')
 exports.get = defaultResponse(req => {
-  return Salary.find().populate('projectId').populate('userId').exec()
+  return Salary.find().populate('projectId').populate('userId').sort('-date').exec()
+})
+
+exports.userId = defaultResponse(req => Salary.find({userId: req.params.userId}).populate('projectId').populate('userId').sort('-date').exec())
+
+exports.date = defaultResponse(async req => {
+
+  if (req.params.date == 7) {
+    betweenDate = await moment(new Date()).startOf('week')
+    console.log(betweenDate);
+  }
+  else if (req.params.date == 30) {
+    betweenDate = await moment(new Date()).startOf('month')
+  }
+  else if (req.params.date == 365) {
+    betweenDate = await moment(new Date()).startOf('year')
+  }
+  else if (req.params.date == 0) {
+    betweenDate = '01/01/2018'
+  }
+  return Salary.find({$and: [{userId: req.params.userId}, {date: {
+    $gte: betweenDate
+  }}]}).populate('projectId').populate('userId').sort('-date').exec()
 })
 
 exports.info = defaultResponse(req => {
@@ -15,7 +37,7 @@ exports.add = (req, res) => {
     Project.findById(req.body.projectId).exec((err, founded) => {
       let update = {
         $inc: {salaries: 1},
-        $set: {howmany: founded.howmany - req.body.value}
+        $set: {howmany: founded.howmany - req.body.amount}
       }
       Project.findByIdAndUpdate(req.body.projectId, update, {new:true}).exec()
     })

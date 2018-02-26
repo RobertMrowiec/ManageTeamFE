@@ -1,29 +1,18 @@
 import React, {Component} from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import classNames from 'classnames';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
-import TextField from 'material-ui/TextField';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Toolbar from 'material-ui/Toolbar';
-import { MenuItem } from 'material-ui/Menu';
 import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu'; 
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
-import ChevronRightIcon from 'material-ui-icons/ChevronRight';
-import Divider from 'material-ui/Divider';
-import { List, ListItem, ListItemText } from 'material-ui/List';
-import InboxIcon from 'material-ui-icons/Inbox';
-import Hidden from 'material-ui/Hidden';
-import {browserHistory} from 'react-router';
+import { ListItem, ListItemText } from 'material-ui/List';
 import {
   BrowserRouter as Router,
-  Route,
-  Link
+  Route
 } from 'react-router-dom';  
 
 
@@ -31,10 +20,12 @@ import GetProjects from './pages/getProjects';
 import AddProjects from './pages/AddProjects';
 import EditProjects from './pages/EditProjects';
 import GetUsers from './pages/getUsers';
+import GetUserInfo from './pages/getUserInfo';
 import AddUsers from './pages/AddUsers';
 import EditUsers from './pages/EditUsers';
 import Home from './pages/Home';
 import GetSalaries from './pages/getSalaries';
+import AddSalaries from './pages/AddSalaries';
 
 const drawerWidth = 240;
 
@@ -182,9 +173,11 @@ class App extends Component {
                 <Route path="/addProjects" component={AddProjects} />
                 <Route path="/editProjects/:id" component={EditProjects} />
                 <Route path="/users" component={GetUsers} />
+                <Route path="/userInfo/:id" component={GetUserInfo} />
                 <Route path="/addUsers" component={AddUsers} />
                 <Route path="/editUsers/:id" component={EditUsers} />
                 <Route path="/salaries" component={GetSalaries} />
+                <Route path="/addSalaries" component={AddSalaries} />
 
                 {/* <Route path="/salaries/add" component={AddSalaries} /> */}
                 {/* <Route path="/users/add" component={AddUsers} /> */}

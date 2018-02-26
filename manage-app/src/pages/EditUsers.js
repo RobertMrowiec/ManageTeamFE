@@ -76,7 +76,12 @@ class EditUser extends React.Component {
   };
 
   handleProjectChange = event => {
-    this.setState({ projects: event.target.value });
+    // if (event.target.value != this.state.projects) {
+      console.log(event.target.value)
+      console.log(this.state.projects)
+      
+      this.setState({ projects: event.target.value });
+    // }
   };
 
   handleChange = name => event => {
@@ -115,6 +120,7 @@ class EditUser extends React.Component {
       projects: this.state.projects
     }
     let Edit = () => {
+      console.log(object);
       fetch('http://localhost:8030/api/users/' + this.props.match.params.id,
         {
           headers: {
@@ -138,6 +144,7 @@ class EditUser extends React.Component {
     }
     
     let doSomething = () => {
+      console.log(object);
       fetch('http://localhost:8030/api/users',
         {
           headers: {
@@ -212,7 +219,7 @@ class EditUser extends React.Component {
 
           <Snackbar
             open={this.state.open}
-            message="Edytowano projekt"
+            message="Edytowano uzytkownika"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
           />

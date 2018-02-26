@@ -10,23 +10,30 @@ exports.info = defaultResponse(req => {
   return User.findById(req.params.id).populate('projects').exec()
 })
 
-exports.add = (req, res) => {
-  return new User(req.body).save().then((change) => {
-    req.body.projects.forEach((project) => {
-      Project.findByIdAndUpdate(project, { $inc: { peoples: 1 }}, {new: true}).exec()
+exports.add = defaultResponse(async req => {
+  return new User(req.body).save()
+    .then(async saved => {
+      req.body.projects.forEach(async project => {
+        await Project.findByIdAndUpdate(project, { $inc: { peoples: 1 }}, {new: true}).exec()
+      })
+      return saved
     })
-  }).then((result) => {
-    res.status(200).json('Done')
-  }).catch(err => res.status(400).json(err))
-}
-
-exports.delete = defaultResponse(req => {
-  return User.findByIdAndRemove(req.params.id).exec()
 })
 
 exports.update = defaultResponse(req => {
   let tab = []
   return User.findById(req.params.id).exec().then(found => {
     return User.findByIdAndUpdate(req.params.id, req.body, {new: true}).exec()
+  })
+})
+
+exports.delete = defaultResponse(req => {
+  return User.findByIdAndRemove(req.params.id).exec()
+})
+
+exports.deleteProject = defaultResponse(async req => {
+  return User.findById(req.params.userId).lean().exec().then(async user => {
+    user.projects = await user.projects.filter(x => x != req.params.projectId)
+    return User.findByIdAndUpdate(req.params.userId, user, {new: true}).exec()
   })
 })

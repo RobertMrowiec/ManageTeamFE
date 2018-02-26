@@ -7,6 +7,7 @@ router
     .get('/:id', user.info)
     .post('/', user.add)
     .delete('/:id', user.delete)
+    .delete('/:userId/projects/:projectId', user.deleteProject)
     .put('/:id', user.update)
 
 module.exports = router

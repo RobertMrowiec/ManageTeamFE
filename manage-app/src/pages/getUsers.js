@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
@@ -8,12 +6,12 @@ import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import DeleteIcon from 'material-ui-icons/Delete';
+import { Redirect } from 'react-router-dom';
 import Dialog, {
   DialogActions,
-  DialogContent,
-  DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
+import { Link } from 'react-router-dom';  
 
 const styles = theme => ({
   root: {
@@ -38,7 +36,8 @@ class GetUsers extends Component {
     super(props);
     this.state = {
       users: [],
-      openDialog: false
+      openDialog: false,
+      userId: ''
     }
   }
 
@@ -49,6 +48,11 @@ class GetUsers extends Component {
       this.setState({users: this.state.users.filter(f => f._id !== user._id)});
       this.setState({openDialog: false})
     })
+  }
+
+  redirectFunction (user) {
+    this.setState({userId: user._id})
+    this.setState({redirect: true})
   }
 
   componentDidMount() {
@@ -65,8 +69,16 @@ class GetUsers extends Component {
   };
 
   render () {
-    const {users} = this.state;
-      
+    
+    const { users } = this.state;
+    const { redirect } = this.state
+
+    if (redirect) {
+      return (
+        <Redirect to={{pathname: '/userInfo/' + `${this.state.userId}` }}/>
+      )
+    }
+
     return (
       <div>
         <div style = {{marginLeft: '95%', marginBottom: '0.5%'}}>
@@ -92,14 +104,14 @@ class GetUsers extends Component {
               return (
                 <TableRow key={i}>
                   <TableCell>{i + 1}</TableCell>
-                  <TableCell>{user.name}</TableCell> 
-                  <TableCell>{user.surname}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.projects.length}</TableCell>
+                  <TableCell onClick={ () => this.redirectFunction(user)} >{user.name}</TableCell> 
+                  <TableCell onClick={ () => this.redirectFunction(user)} >{user.surname}</TableCell>
+                  <TableCell onClick={ () => this.redirectFunction(user)} >{user.email}</TableCell>
+                  <TableCell onClick={ () => this.redirectFunction(user)} >{user.projects.length}</TableCell>
                   <TableCell>
 
                     {/* edycja */}
-                    <Button fab mini color="primary" aria-label="add" style={{width:'35px', height:'23px'}} href={'/editUsers/' +`${user._id}`}>
+                    <Button fab mini color="primary" aria-label="add" style={{width:'35px', height:'23px'}} href={'/editUsers/' +`${user._id}`} >
                       <ModeEditIcon style = {{width:'60%', height:'60%'}}/>
                     </Button>
 
@@ -107,13 +119,13 @@ class GetUsers extends Component {
                   <TableCell>
 
                     {/* usuwanie  */}
-                    <Button fab mini color="accent" aria-label="add" style={{width:'35px', height:'23px'}} onClick={ () => this.deleteFunction(user)} >
+                    <Button fab mini color="accent" aria-label="add" style={{width:'35px', height:'23px'}} onClick={() => {this.deleteFunction(user)}} >
                       <DeleteIcon style = {{width:'60%', height:'60%'}}/>
                     </Button>
 
                   </TableCell>
 
-                  {/* <Dialog
+                  <Dialog
                     open={this.state.openDialog}
                     onClose={this.handleClose}
                   >
@@ -122,11 +134,11 @@ class GetUsers extends Component {
                     <Button onClick={this.handleClose} color="primary">
                       Anuluj
                     </Button>
-                    <Button onClick={(e) => this.deleteFunction(user, e)} color="accent" autoFocus>
+                    <Button onClick={(e) => console.log(user)} color="accent" autoFocus>
                       Usuń
                     </Button>
                   </DialogActions>
-                </Dialog> */}
+                </Dialog>
 
 
                 </TableRow>

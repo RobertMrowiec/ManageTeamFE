@@ -9,6 +9,10 @@ exports.info = defaultResponse(req => {
   return Project.findById(req.params.id).exec()
 })
 
+exports.info = defaultResponse(req => {
+  return Project.findById(req.params.id).exec()
+})
+
 exports.add = defaultResponse(req => {
   req.body.howmany = req.body.amount
   return new Project(req.body).save()
