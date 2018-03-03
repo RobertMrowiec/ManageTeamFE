@@ -9,18 +9,7 @@ import Button from 'material-ui/Button';
 import { Redirect } from 'react-router-dom';
 import { ListItemText } from 'material-ui/List';
 
-const styles = {
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  formControl: {
-    minWidth: 120,
-    maxWidth: 300,
-  },
-  button : {
-    margin: 30
-  },
+const style = {
   div: {
     margin: 'auto',
     width: '15%',
@@ -30,9 +19,10 @@ const styles = {
     margin: 'auto',
     width: '100%'
   }
-};
+}
 
-class AddSalaries extends React.Component {
+
+class EditSalaries extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,31 +32,31 @@ class AddSalaries extends React.Component {
       title: '',
       userId:'',
       projectId: '',
+      userName: '',
+      projectName: '',
       projects: [],
       users: []
     }
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/projects')
+    fetch('http://localhost:8030/api/salaries/' + this.props.match.params.id)
       .then( response => response.json())
-      .then( projects => this.setState({projects: projects}))
-      .then( () => {
-        fetch('http://localhost:8030/api/users')
-          .then(response => response.json())
-          .then( users => this.setState({users: users}))
-      })
+      .then( data => this.setState({
+        title: data.title,
+        amount: data.amount,
+        userId: data.userId._id,
+        projectId: data.projectId._id,
+        projectName: data.projectId.name,
+        userName: data.userId.name
+      }))
   }
 
+  
   handleRequestClose = () => {
     this.setState({
       open: false,
-    });
-  };
-
-  handleClick = () => {
-    this.setState({
-      open: true,
+      openError: false
     });
   };
 
@@ -76,10 +66,10 @@ class AddSalaries extends React.Component {
     });
   };
 
-  render() {
 
+  render(){
     const { redirect } = this.state
-
+    console.log(this.state)
     if (redirect) {
       return (
         <Redirect to={{pathname: '/salaries' }}/>
@@ -102,19 +92,18 @@ class AddSalaries extends React.Component {
     let object = {
       title: this.state.title,
       amount: this.state.amount,
-      userId: this.state.userId,
-      projectId: this.state.projectId
+      projectId: this.state.projectId._id,
+      userId: this.state.userId._id,
     }
-
-    let doSomething = () => {
-      console.log(object);
-      fetch('http://localhost:8030/api/salaries',
+    
+    let Edit = () => {
+      fetch('http://localhost:8030/api/salaries/' + this.props.match.params.id,
         {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          method: "POST",
+          method: "PUT",
           body: JSON.stringify(object)
         }
       ).then(response => {
@@ -125,13 +114,18 @@ class AddSalaries extends React.Component {
       }).then(changeSnackBar)
         .catch(changeSnackBarToError)
     }
+    
+    let Cancel = () => {
+     {this.setState({redirect: true})}
+    }
 
     return (
-      <div style={styles.div}>
+      
+      <div style={style.div}>
         <TextField
           id="title"
-          label="Temat"
-          placeholder="Np. Za super pracę!"
+          label="Tytuł"
+          placeholder={this.state.title}
           margin="normal"
           onChange={this.handleChange('title')}
         />
@@ -143,15 +137,16 @@ class AddSalaries extends React.Component {
           InputLabelProps={{
             shrink: true
           }}
+          placeholder={this.state.amount}
           margin="normal"
           onChange={this.handleChange('amount')}
         />
 
 
         <FormControl  style={{minWidth:166, maxWidth: 166}}>
-          <InputLabel htmlFor="projects-simple"> Projekt </InputLabel>
+          <InputLabel htmlFor="projects-simple">Projects</InputLabel>
           <Select
-            value={this.state.projectId}
+            value={this.state.projectName}
             onChange={this.handleChange('projectId')}
             inputProps={{
               name: 'projects',
@@ -167,10 +162,11 @@ class AddSalaries extends React.Component {
         </FormControl>
 
 
+
         <FormControl  style={{minWidth:166, maxWidth: 166}}>
-          <InputLabel htmlFor="users-simple"> Odbiorca </InputLabel>
+          <InputLabel htmlFor="users-simple">Users</InputLabel>
           <Select
-            value={this.state.userId}
+            value={this.state.userName}
             onChange={this.handleChange('userId')}
             inputProps={{
               name: 'users',
@@ -185,26 +181,25 @@ class AddSalaries extends React.Component {
           </Select>
         </FormControl>
 
-        <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
-            Dodaj wypłatę
+        <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>
+            Edytuj wypłatę
           </Button>
-      
+
           <Snackbar
             open={this.state.open}
-            message="Dodano wypłatę"
+            message="Edytowano wypłatę"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
           />
 
           <Snackbar
             open={this.state.openError}
-            message="Błąd podczas dodawania"
+            message="Błąd podczas edytowania"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
           />
-      </div>
-    );
+      </div>    )
   }
 }
 
-export default (AddSalaries);
+export default EditSalaries;

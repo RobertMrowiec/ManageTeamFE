@@ -1,5 +1,6 @@
 const User = require('../../models/user')
 const Project = require('../../models/project')
+const Salary = require('../../models/salary')
 const { defaultResponse } = require('../common')
 
 exports.get = defaultResponse(req => {
@@ -12,23 +13,20 @@ exports.info = defaultResponse(req => {
 
 exports.add = defaultResponse(async req => {
   return new User(req.body).save()
-    .then(async saved => {
-      req.body.projects.forEach(async project => {
-        await Project.findByIdAndUpdate(project, { $inc: { peoples: 1 }}, {new: true}).exec()
-      })
-      return saved
-    })
 })
 
-exports.update = defaultResponse(req => {
-  let tab = []
-  return User.findById(req.params.id).exec().then(found => {
+exports.update = defaultResponse(async req => {
     return User.findByIdAndUpdate(req.params.id, req.body, {new: true}).exec()
-  })
 })
 
 exports.delete = defaultResponse(req => {
-  return User.findByIdAndRemove(req.params.id).exec()
+  return Salary.find({userId: req.params.id}).lean().exec().then(async salaries => {
+    await salaries.forEach(salary => {
+      Salary.findByIdAndRemove(salary._id).exec()
+    })
+  }).then(() => {
+    return User.findByIdAndRemove(req.params.id).exec()
+  })
 })
 
 exports.deleteProject = defaultResponse(async req => {

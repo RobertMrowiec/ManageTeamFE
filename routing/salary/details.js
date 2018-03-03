@@ -47,7 +47,11 @@ exports.add = (req, res) => {
 }
 
 exports.delete = defaultResponse(req => {
-  return Salary.findByIdAndRemove(req.params.id).exec()
+  return Salary.findById(req.params.id).lean().exec().then(salary => {
+    Project.findByIdAndUpdate(salary.projectId, {$inc: {howmany: salary.amount}}, {new:true}).exec()
+  }).then(() => {
+    return Salary.findByIdAndRemove(req.params.id).exec()
+  })
 })
 
 exports.update = defaultResponse(req => {

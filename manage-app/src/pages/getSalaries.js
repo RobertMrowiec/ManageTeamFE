@@ -59,8 +59,11 @@ class GetSalaries extends Component {
               <TableCell>ID</TableCell>
               <TableCell>Odbiorca</TableCell>
               <TableCell>Projekt</TableCell>
+              <TableCell>Tytuł</TableCell>
               <TableCell>Kwota</TableCell>
               <TableCell>Data</TableCell>
+              <TableCell>Edycja</TableCell>
+              <TableCell>Usuwanie</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -76,6 +79,7 @@ class GetSalaries extends Component {
                   <TableCell>{i+1}</TableCell>
                   <TableCell>{salary.userId.name} {salary.userId.surname}</TableCell>
                   <TableCell>{salary.projectId.name}</TableCell>
+                  <TableCell>{salary.title}</TableCell>
                   <TableCell>{salary.amount}</TableCell>
                   <TableCell>{salary.date}</TableCell>
                   <TableCell>

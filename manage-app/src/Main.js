@@ -26,6 +26,7 @@ import EditUsers from './pages/EditUsers';
 import Home from './pages/Home';
 import GetSalaries from './pages/getSalaries';
 import AddSalaries from './pages/AddSalaries';
+import EditSalaries from './pages/EditSalaries';
 
 const drawerWidth = 240;
 
@@ -178,6 +179,7 @@ class App extends Component {
                 <Route path="/editUsers/:id" component={EditUsers} />
                 <Route path="/salaries" component={GetSalaries} />
                 <Route path="/addSalaries" component={AddSalaries} />
+                <Route path="/editSalaries/:id" component={EditSalaries} />
 
                 {/* <Route path="/salaries/add" component={AddSalaries} /> */}
                 {/* <Route path="/users/add" component={AddUsers} /> */}
