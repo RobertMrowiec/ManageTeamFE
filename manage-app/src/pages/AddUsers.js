@@ -48,7 +48,6 @@ class AddUser extends React.Component {
         name:'',
         surname:'',
         email:'',
-        projects: [],
         values: [],
         tag: new Set()
       };
@@ -70,10 +69,6 @@ class AddUser extends React.Component {
     this.setState({
       open: true,
     });
-  };
-
-  handleProjectChange = event => {
-    this.setState({ projects: event.target.value });
   };
 
   handleChange = name => event => {

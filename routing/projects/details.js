@@ -1,4 +1,5 @@
 const Project = require('../../models/project')
+const User = require('../../models/user')
 const { defaultResponse } = require('../common')
 
 exports.get = defaultResponse(req => {
@@ -15,7 +16,14 @@ exports.info = defaultResponse(req => {
 
 exports.add = defaultResponse(req => {
   req.body.howmany = req.body.amount
-  return new Project(req.body).save()
+  return new Project(req.body).save().then(saved => {
+    console.log(req.body.users)
+    
+    req.body.users.forEach(async user => {
+      await User.findByIdAndUpdate(user,  { $push: { projects: saved._id }}, {new: true})
+    })
+    return saved
+  })
 })
 
 exports.delete = defaultResponse(req => {

@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField'
+import { FormControl } from 'material-ui/Form';
+import Checkbox from 'material-ui/Checkbox';
+import { ListItemText } from 'material-ui/List';
+import Select from 'material-ui/Select';
+import Input, { InputLabel } from 'material-ui/Input';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/Menu/MenuItem';
@@ -27,8 +32,16 @@ class AddProjects extends Component {
       open: false,
       openError: false,
       name: '',
-      redirect: false
+      redirect: false,
+      tag: new Set(),
+      values: []
     }
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:8030/api/users')
+      .then( response => response.json())
+      .then( data => this.setState({values: data}))
   }
 
   handleRequestClose = () => {
@@ -44,6 +57,9 @@ class AddProjects extends Component {
     });
   };
 
+  handleTagChange = event => {
+    this.setState({ tag: new Set(event.target.value) });
+  };
 
   render(){
     const { redirect } = this.state
@@ -69,10 +85,13 @@ class AddProjects extends Component {
 
     let object = {
       name: this.state.name,
-      amount: this.state.amount
+      amount: this.state.amount,
+      users: this.state.tag
     }
     
     let doSomething = () => {
+      let array = Array.from(this.state.tag);
+      object.users = array
       fetch('http://localhost:8030/api/projects',
         {
           headers: {
@@ -112,6 +131,24 @@ class AddProjects extends Component {
             onChange={this.handleChange('amount')}
           />
           
+          <FormControl style={{minWidth:166, maxWidth: 166}}>
+          <InputLabel htmlFor="tag-multiple">Uzytkownicy</InputLabel>
+          <Select
+            multiple
+            value={[...this.state.tag]}
+            onChange={this.handleTagChange}
+            input={<Input id="tag-multiple" />}
+            renderValue={selected => selected.join(', ')}
+          >
+            {this.state.values.map(tag => (
+              <MenuItem key={tag.id} value={tag._id}>
+                <Checkbox checked={this.state.tag.has(tag._id)} />
+                <ListItemText primary={tag.name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
           <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
             Dodaj projekt
           </Button>
