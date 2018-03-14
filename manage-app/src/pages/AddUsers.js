@@ -77,10 +77,6 @@ class AddUser extends React.Component {
     });
   };
 
-  handleTagChange = event => {
-    this.setState({ tag: new Set(event.target.value) });
-  };
-
   render() {
 
     const { redirect } = this.state
@@ -108,7 +104,6 @@ class AddUser extends React.Component {
       name: this.state.name,
       surname: this.state.surname,
       email: this.state.email,
-      projects: this.state.tag
     }
 
     let doSomething = () => {
@@ -155,25 +150,6 @@ class AddUser extends React.Component {
           margin="normal"
           onChange={this.handleChange('email')}
         />
-
-
-        <FormControl style={{minWidth:166, maxWidth: 166}}>
-        <InputLabel htmlFor="tag-multiple">Projekty</InputLabel>
-        <Select
-          multiple
-          value={[...this.state.tag]}
-          onChange={this.handleTagChange}
-          input={<Input id="tag-multiple" />}
-          renderValue={selected => selected.join(', ')}
-        >
-          {this.state.values.map(tag => (
-            <MenuItem key={tag.id} value={tag._id}>
-              <Checkbox checked={this.state.tag.has(tag._id)} />
-              <ListItemText primary={tag.name} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
 
         <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
             Dodaj projekt

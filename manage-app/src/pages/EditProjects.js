@@ -6,6 +6,11 @@ import MenuItem from 'material-ui/Menu/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
 import { Link, Redirect } from 'react-router-dom';
+import { FormControl } from 'material-ui/Form';
+import Input, { InputLabel } from 'material-ui/Input';
+import { ListItemText } from 'material-ui/List';
+import Checkbox from 'material-ui/Checkbox';
+import Select from 'material-ui/Select';
 
 const style = {
   div: {
@@ -29,6 +34,8 @@ class AddProjects extends Component {
       name: '',
       amount: '',
       redirect: false,
+      tag: new Set(),
+      values: []
     }
   }
 
@@ -38,7 +45,11 @@ class AddProjects extends Component {
       .then( data => this.setState({
         name: data.name,
         amount: data.amount
-      }))
+      })).then(() => {
+        fetch('http://localhost:8030/api/users')
+        .then( response => response.json())
+        .then( data => this.setState({values: data}))
+      })
   }
 
   
@@ -55,6 +66,9 @@ class AddProjects extends Component {
     });
   };
 
+  handleTagChange = event => {
+    this.setState({ tag: new Set(event.target.value) });
+  };
 
   render(){
     const { redirect } = this.state
@@ -84,6 +98,9 @@ class AddProjects extends Component {
     }
     
     let Edit = () => {
+      let array = Array.from(this.state.tag);
+      object.users = array
+      console.log(object);
       fetch('http://localhost:8030/api/projects/' + this.props.match.params.id,
         {
           headers: {
@@ -129,6 +146,25 @@ class AddProjects extends Component {
             onChange={this.handleChange('amount')}
           />
           
+
+          <FormControl style={{minWidth:166, maxWidth: 166}}>
+            <InputLabel htmlFor="tag-multiple">Uzytkownicy</InputLabel>
+            <Select
+              multiple
+              value={[...this.state.tag]}
+              onChange={this.handleTagChange}
+              input={<Input id="tag-multiple" />}
+              renderValue={selected => selected.join(', ')}
+            >
+              {this.state.values.map(tag => (
+                <MenuItem key={tag.id} value={tag._id}>
+                  <Checkbox checked={this.state.tag.has(tag._id)} />
+                  <ListItemText primary={tag.name} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Cancel}>
             Cofnij
           </Button>
