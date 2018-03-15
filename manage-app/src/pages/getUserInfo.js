@@ -88,7 +88,7 @@ class GetUserInfo extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/users/' + this.props.match.params.id)
+    fetch('https://reactmanagebe.herokuapp.com/api/users/' + this.props.match.params.id)
       .then( response => response.json())
       .then( data => this.setState({
         name: data.name,
@@ -99,7 +99,7 @@ class GetUserInfo extends Component {
       }),
       )
       .then(() => {
-        fetch('http://localhost:8030/api/salaries/user/' + this.props.match.params.id)
+        fetch('https://reactmanagebe.herokuapp.com/api/salaries/user/' + this.props.match.params.id)
         .then( response => response.json())
         .then( salaryData => this.setState({salaries: salaryData}))
       })
@@ -107,13 +107,13 @@ class GetUserInfo extends Component {
 
   changeSalary = event => {
     this.setState({ age: event.target.value});
-    fetch('http://localhost:8030/api/salaries/user/' + this.props.match.params.id + '/date/' + event.target.value)
+    fetch('https://reactmanagebe.herokuapp.com/api/salaries/user/' + this.props.match.params.id + '/date/' + event.target.value)
     .then( response => response.json())
     .then( salaryData => this.setState({salaries: salaryData}))
   };
 
   handleDelete = data => () => {
-    fetch('http://localhost:8030/api/users/' + this.props.match.params.id + '/projects/' + data._id,{
+    fetch('https://reactmanagebe.herokuapp.com/api/users/' + this.props.match.params.id + '/projects/' + data._id,{
       method: 'delete'
     }).then(() => {
       this.setState({chipData: this.state.chipData.filter(f => f._id !== data._id)});

@@ -9,7 +9,7 @@ class Projects extends Component {
   }
 
     componentDidMount() {
-      fetch('http://localhost:8030/api/projects')
+      fetch('https://reactmanagebe.herokuapp.com/api/projects')
         .then( response => response.json())
         .then( data => this.setState({projects: data}))
     }

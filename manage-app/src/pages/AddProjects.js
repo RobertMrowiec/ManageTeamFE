@@ -39,7 +39,7 @@ class AddProjects extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/users')
+    fetch('https://reactmanagebe.herokuapp.com/api/users')
       .then( response => response.json())
       .then( data => this.setState({values: data}))
   }
@@ -92,7 +92,7 @@ class AddProjects extends Component {
     let doSomething = () => {
       let array = Array.from(this.state.tag);
       object.users = array
-      fetch('http://localhost:8030/api/projects',
+      fetch('https://reactmanagebe.herokuapp.com/api/projects',
         {
           headers: {
             'Accept': 'application/json',

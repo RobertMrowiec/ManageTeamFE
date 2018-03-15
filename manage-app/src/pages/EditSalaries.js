@@ -40,7 +40,7 @@ class EditSalaries extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/salaries/' + this.props.match.params.id)
+    fetch('https://reactmanagebe.herokuapp.com/api/salaries/' + this.props.match.params.id)
       .then( response => response.json())
       .then( data => this.setState({
         title: data.title,
@@ -97,7 +97,7 @@ class EditSalaries extends React.Component {
     }
     
     let Edit = () => {
-      fetch('http://localhost:8030/api/salaries/' + this.props.match.params.id,
+      fetch('https://reactmanagebe.herokuapp.com/api/salaries/' + this.props.match.params.id,
         {
           headers: {
             'Accept': 'application/json',

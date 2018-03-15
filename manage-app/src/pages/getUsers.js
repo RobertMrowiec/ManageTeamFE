@@ -42,7 +42,7 @@ class GetUsers extends Component {
   }
 
   deleteFunction (user, e) {
-    fetch('http://localhost:8030/api/users/' + user._id,{
+    fetch('https://reactmanagebe.herokuapp.com/api/users/' + user._id,{
       method: 'delete'
     }).then(() => {
       this.setState({users: this.state.users.filter(f => f._id !== user._id)});
@@ -56,7 +56,7 @@ class GetUsers extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/users')
+    fetch('https://reactmanagebe.herokuapp.com/api/users')
       .then( response => response.json())
       .then( data => this.setState({users: data}))
   }

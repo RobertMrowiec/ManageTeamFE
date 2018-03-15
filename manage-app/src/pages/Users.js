@@ -9,7 +9,7 @@ class Users extends Component {
   }
 
     componentDidMount() {
-      fetch('http://localhost:8030/api/users')
+      fetch('https://reactmanagebe.herokuapp.com/api/users')
         .then( response => response.json())
         .then( data => this.setState({users: data}))
     }

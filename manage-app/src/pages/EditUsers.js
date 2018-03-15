@@ -48,7 +48,7 @@ class EditUser extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/users/' + this.props.match.params.id)
+    fetch('https://reactmanagebe.herokuapp.com/api/users/' + this.props.match.params.id)
       .then( response => response.json())
       .then( data => this.setState({
         name: data.name,
@@ -57,7 +57,7 @@ class EditUser extends React.Component {
         projects: data.projects
       }))
       .then(() => {
-        fetch('http://localhost:8030/api/projects')
+        fetch('https://reactmanagebe.herokuapp.com/api/projects')
           .then( response => response.json())
           .then( projectData => this.setState({values: projectData}))
       })
@@ -121,7 +121,7 @@ class EditUser extends React.Component {
     }
     let Edit = () => {
       console.log(object);
-      fetch('http://localhost:8030/api/users/' + this.props.match.params.id,
+      fetch('https://reactmanagebe.herokuapp.com/api/users/' + this.props.match.params.id,
         {
           headers: {
             'Accept': 'application/json',
@@ -145,7 +145,7 @@ class EditUser extends React.Component {
     
     let doSomething = () => {
       console.log(object);
-      fetch('http://localhost:8030/api/users',
+      fetch('https://reactmanagebe.herokuapp.com/api/users',
         {
           headers: {
             'Accept': 'application/json',

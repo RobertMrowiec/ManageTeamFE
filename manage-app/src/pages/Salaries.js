@@ -9,7 +9,7 @@ class Salaries extends Component {
   }
 
     componentDidMount() {
-      fetch('http://localhost:8030/api/salaries')
+      fetch('https://reactmanagebe.herokuapp.com/api/salaries')
         .then( response => response.json())
         .then( data => this.setState({salaries: data}))
     }

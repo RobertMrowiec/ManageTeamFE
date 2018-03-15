@@ -48,11 +48,11 @@ class AddSalaries extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/projects')
+    fetch('https://reactmanagebe.herokuapp.com/api/projects')
       .then( response => response.json())
       .then( projects => this.setState({projects: projects}))
       .then( () => {
-        fetch('http://localhost:8030/api/users')
+        fetch('https://reactmanagebe.herokuapp.com/api/users')
           .then(response => response.json())
           .then( users => this.setState({users: users}))
       })
@@ -108,7 +108,7 @@ class AddSalaries extends React.Component {
 
     let doSomething = () => {
       console.log(object);
-      fetch('http://localhost:8030/api/salaries',
+      fetch('https://reactmanagebe.herokuapp.com/api/salaries',
         {
           headers: {
             'Accept': 'application/json',

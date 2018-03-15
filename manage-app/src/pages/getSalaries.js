@@ -29,7 +29,7 @@ class GetSalaries extends Component {
   }
 
   deleteFunction (salary, e) {
-    fetch('http://localhost:8030/api/salaries/' + salary._id,{
+    fetch('https://reactmanagebe.herokuapp.com/api/salaries/' + salary._id,{
       method: 'delete'
     }).then(() => {
       this.setState({salaries: this.state.salaries.filter(f => f._id !== salary._id)});
@@ -38,7 +38,7 @@ class GetSalaries extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/salaries')
+    fetch('https://reactmanagebe.herokuapp.com/api/salaries')
       .then( response => response.json())
       .then( data => this.setState({salaries: data}))
   }

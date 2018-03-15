@@ -47,7 +47,7 @@ class GetProjects extends Component {
   }
 
   deleteFunction (project, e) {
-    fetch('http://localhost:8030/api/projects/' + project._id,{
+    fetch('https://reactmanagebe.herokuapp.com/api/projects/' + project._id,{
       method: 'delete'
     }).then(() => {
       this.setState({projects: this.state.projects.filter(f => f._id !== project._id)});
@@ -56,7 +56,7 @@ class GetProjects extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8030/api/projects')
+    fetch('https://reactmanagebe.herokuapp.com/api/projects')
       .then( response => response.json())
       .then( data => this.setState({projects: data}))
   }
