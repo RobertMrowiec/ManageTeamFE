@@ -24,13 +24,6 @@ const styles = theme => ({
   },
   table: {
     minWidth: 700
-  },
-  button: {
-    marginRight: theme.spacing.unit
-  },
-  buttonEdit: {
-    width: '30px',
-    height: 30
   }
 });
 
@@ -39,15 +32,16 @@ class GetProjects extends Component {
     super(props);
     this.state = {
       projects: [],
-      openDialog: false
+      openDialog: false,
+      selectedProject: ''
     }
   }
 
-  deleteFunction (project, e) {
-    fetch('https://reactmanagebe.herokuapp.com/api/projects/' + project._id,{
+  deleteFunction (project) {    
+    fetch('https://reactmanagebe.herokuapp.com/api/projects/' + project,{
       method: 'delete'
     }).then(() => {
-      this.setState({projects: this.state.projects.filter(f => f._id !== project._id)});
+      this.setState({projects: this.state.projects.filter(f => f._id !== project)});
       this.setState({openDialog: false})
     })
   }
@@ -57,7 +51,8 @@ class GetProjects extends Component {
       .then( response => response.json())
       .then( data => this.setState({projects: data}))
   }
-  handleOpen = () => {
+  handleOpen = (project) => {
+    this.setState({ selectedProject: project})
     this.setState({ openDialog: true });
   };
 
@@ -105,16 +100,16 @@ class GetProjects extends Component {
                   <TableCell>
 
                     {/* edycja */}
-                    <Button fab mini color="primary" aria-label="add" style={{width:'35px', height:'23px'}} href={'/editProjects/' +`${project._id}`}>
-                      <ModeEditIcon style = {{width:'60%', height:'60%'}}/>
+                    <Button size='small' color="primary" aria-label="edit" style={{width:'35px', height:'23px'}} href={'/editProjects/' +`${project._id}`}>
+                      <ModeEditIcon />
                     </Button>
 
                   </TableCell>
                   <TableCell>
                     
                     {/* usuwanie  */}
-                    <Button fab mini color="accent" aria-label="add" style={{width:'35px', height:'23px'}} onClick={() => {this.deleteFunction(project)}} >
-                      <DeleteIcon style = {{width:'60%', height:'60%'}}/>
+                    <Button size='small' color="secondary" aria-label="delete" style={{width:'35px', height:'23px'}} onClick={() => this.handleOpen(project._id)}>
+                      <DeleteIcon />
                     </Button>
 
                   </TableCell>
@@ -125,11 +120,11 @@ class GetProjects extends Component {
                   >
                     <DialogTitle>{"Czy na pewno chcesz usunąć ten projekt?"}</DialogTitle>
                     <DialogActions>
-                      <Button onClick={this.handleClose} color="primary">
+                      <Button onClick={() => this.handleClose()} color="primary">
                         Anuluj
                       </Button>
-                      <Button onClick={() => console.log(project._id)
-                      } color="accent" autoFocus>
+                      <Button onClick={() => this.deleteFunction(this.state.selectedProject)}
+                        color="secondary" autoFocus>
                         Usuń
                       </Button>
                     </DialogActions>
