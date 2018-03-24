@@ -210,7 +210,7 @@ class EditUser extends React.Component {
           </Select>
         </FormControl>
           
-          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Cancel}>
+          <Button raised color="primary" style={{marginLeft:'unset', marginTop:'10px'}} onClick={Cancel}>
             Cofnij
           </Button>
           <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>

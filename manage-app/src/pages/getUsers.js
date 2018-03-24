@@ -12,6 +12,7 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import { Link } from 'react-router-dom';  
+import Typography from 'material-ui/Typography';
 
 const styles = theme => ({
   root: {
@@ -81,7 +82,11 @@ class GetUsers extends Component {
 
     return (
       <div>
-        <div style = {{marginLeft: '95%', marginBottom: '0.5%'}}>
+        <div style={{marginLeft: '-5%', marginBottom: '-2%'}}>
+          <Typography variant = 'headline' align='center'> Programiści: </Typography>
+        </div>
+
+        <div style = {{marginLeft: '94%', marginBottom: '0.5%'}}>
           <Button fab mini color="primary" aria-label="add" className={styles.button} component={Link} to="/addUsers">
             <AddIcon />
           </Button>

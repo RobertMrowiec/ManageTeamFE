@@ -13,8 +13,8 @@ class Home extends Component {
   }
   render(){
     return (
-      <div>
-        <h1>Strona główna</h1>
+      <div style = {{marginLeft:'11%'}}>
+        <h1>Jakies statystyki tu będą</h1>
       </div>
       
     )

@@ -8,6 +8,8 @@ import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import DeleteIcon from 'material-ui-icons/Delete';
+import Typography from 'material-ui/Typography';
+import Moment from 'react-moment';
 
 const styles = theme => ({
   root: {
@@ -47,7 +49,11 @@ class GetSalaries extends Component {
       
     return (
       <div>
-        <div style = {{marginLeft: '95%', marginBottom: '0.5%'}}>
+        <div style={{marginLeft: '-5%', marginBottom: '-2%'}}>
+          <Typography variant = 'headline' align='center'> Wypłaty: </Typography>
+        </div>
+
+        <div style = {{marginLeft: '94%', marginBottom: '0.5%'}}>
           <Button fab mini color="primary" aria-label="add" className={styles.button} component={Link} to="/addSalaries">
             <AddIcon />
           </Button>
@@ -80,8 +86,12 @@ class GetSalaries extends Component {
                   <TableCell>{salary.userId.name} {salary.userId.surname}</TableCell>
                   <TableCell>{salary.projectId.name}</TableCell>
                   <TableCell>{salary.title}</TableCell>
-                  <TableCell>{salary.amount}</TableCell>
-                  <TableCell>{salary.date}</TableCell>
+                  <TableCell>{salary.amount.toFixed(2)} zł</TableCell>
+                  <TableCell>
+                    <Moment format="YYYY/MM/DD hh:mm">
+                      {salary.date}
+                    </Moment>
+                  </TableCell>
                   <TableCell>
 
                     {/* edycja */}

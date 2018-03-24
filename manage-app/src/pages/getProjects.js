@@ -7,6 +7,7 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
+import Typography from 'material-ui/Typography';
 import DeleteIcon from 'material-ui-icons/Delete';
 import Dialog, {
   DialogActions,
@@ -42,10 +43,6 @@ class GetProjects extends Component {
     }
   }
 
-  updateFunction (project, e) {
-    console.log('asd');
-  }
-
   deleteFunction (project, e) {
     fetch('https://reactmanagebe.herokuapp.com/api/projects/' + project._id,{
       method: 'delete'
@@ -72,7 +69,11 @@ class GetProjects extends Component {
     const {projects} = this.state;
     return (
       <div>
-        <div style = {{marginLeft: '95%', marginBottom: '0.5%'}}>
+        <div style={{marginLeft: '-5%', marginBottom: '-2%'}}>
+          <Typography variant = 'headline' align='center'> Projekty: </Typography>
+        </div>
+
+        <div style = {{marginLeft: '94%', marginBottom: '0.5%'}}>
           <Button fab mini color="primary" aria-label="add" className={styles.button} component={Link} to="/addProjects">
             <AddIcon />
           </Button>
@@ -97,8 +98,8 @@ class GetProjects extends Component {
                 <TableRow key={i}>
                   <TableCell>{i + 1}</TableCell>
                   <TableCell>{project.name}</TableCell> 
-                  <TableCell>{project.amount}</TableCell>
-                  <TableCell>{project.howmany}</TableCell>
+                  <TableCell>{project.amount.toFixed(2)} zł</TableCell>
+                  <TableCell>{project.howmany.toFixed(2)} zł</TableCell>
                   <TableCell>{project.peoples}</TableCell>
                   <TableCell>{project.salaries}</TableCell>
                   <TableCell>
@@ -118,7 +119,7 @@ class GetProjects extends Component {
 
                   </TableCell>
 
-                  {/* <Dialog
+                  <Dialog
                     open={this.state.openDialog}
                     onClose={this.handleClose}
                   >
@@ -133,7 +134,7 @@ class GetProjects extends Component {
                       </Button>
                     </DialogActions>
                   </Dialog>
-                  */}
+                 
 
                 </TableRow>
               );

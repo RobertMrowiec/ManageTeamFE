@@ -152,7 +152,7 @@ class AddUser extends React.Component {
         />
 
         <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
-            Dodaj projekt
+            Dodaj uzytkownika
           </Button>
       
           <Snackbar

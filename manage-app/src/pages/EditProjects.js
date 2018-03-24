@@ -11,6 +11,8 @@ import Input, { InputLabel } from 'material-ui/Input';
 import { ListItemText } from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';
 import Select from 'material-ui/Select';
+import Typography from 'material-ui/Typography';
+import 'typeface-roboto'
 
 const style = {
   div: {
@@ -23,6 +25,12 @@ const style = {
     width: '100%'
   }
 }
+
+const divStyleforText = {
+  width: '100%',
+  margin: 'auto',
+  maxWidth: 500
+};
 
 
 class AddProjects extends Component {
@@ -100,7 +108,6 @@ class AddProjects extends Component {
     let Edit = () => {
       let array = Array.from(this.state.tag);
       object.users = array
-      console.log(object);
       fetch('https://reactmanagebe.herokuapp.com/api/projects/' + this.props.match.params.id,
         {
           headers: {
@@ -124,8 +131,14 @@ class AddProjects extends Component {
     }
 
     return (
-      
-      <div style={style.div}>
+      <div>
+        <div style={{marginLeft: '-5%'}}>
+        <Typography variant = 'display1' align='center'> Aktualnie edytujesz projekt: </Typography>
+        <Typography variant = 'display3' align='center'> {this.state.name} </Typography>
+        </div>
+
+        <div style={style.div}>
+         
           <TextField
             id="name"
             label= 'Nazwa projektu'
@@ -165,7 +178,7 @@ class AddProjects extends Component {
             </Select>
           </FormControl>
 
-          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Cancel}>
+          <Button raised color="primary" style={{marginLeft:'unset', marginTop:'10px'}} onClick={Cancel}>
             Cofnij
           </Button>
           <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>
@@ -184,6 +197,7 @@ class AddProjects extends Component {
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
           />
+        </div>
       </div>
     )
   }

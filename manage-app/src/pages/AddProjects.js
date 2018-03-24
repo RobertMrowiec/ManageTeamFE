@@ -12,6 +12,7 @@ import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
 import { Link, Redirect } from 'react-router-dom';
 import { log } from 'util';
+import Typography from 'material-ui/Typography';
 
 const style = {
   div: {
@@ -90,8 +91,13 @@ class AddProjects extends Component {
     }
     
     let doSomething = () => {
-      let array = Array.from(this.state.tag);
-      object.users = array
+      if (!this.state.tag) {
+        object.users = []
+      }
+      else {
+        let array = Array.from(this.state.tag);
+        object.users = array
+      }
       fetch('https://reactmanagebe.herokuapp.com/api/projects',
         {
           headers: {

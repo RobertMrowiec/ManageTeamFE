@@ -16,6 +16,7 @@ import {
 } from 'react-router-dom';  
 
 
+
 import GetProjects from './pages/getProjects';
 import AddProjects from './pages/AddProjects';
 import EditProjects from './pages/EditProjects';
@@ -27,15 +28,18 @@ import Home from './pages/Home';
 import GetSalaries from './pages/getSalaries';
 import AddSalaries from './pages/AddSalaries';
 import EditSalaries from './pages/EditSalaries';
+import Button from 'material-ui/Button';
 
 const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
-    width: '100%',
-    height: 430,
+    marginLeft: '11%',
+    flexGrow: 1,
     zIndex: 1,
     overflow: 'hidden',
+    // position: 'relative',
+    display: 'flex',
   },
   appFrame: {
     position: 'relative',
@@ -44,69 +48,25 @@ const styles = theme => ({
     height: '100%',
   },
   appBar: {
-    position: 'absolute',
-    marginLeft: drawerWidth
+    zIndex: theme.zIndex.drawer + 1,
   },
-  container: {
-    marginTop:'100%'
+  button: {
+    color: 'white',
+    size: 'large',
+    margin: theme.spacing.unit,
   },
-  navIconHide: {
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
+  drawer: {
+    position: 'relative',
+    marginTop: '5%',
   },
-  drawerPaper: {
-    width: 250,
-    [theme.breakpoints.up('md')]: {
-      width: drawerWidth,
-      position: 'relative',
-      height: '-webkit-fill-available',
-    },
-  },
-  content: {
-    backgroundColor: theme.palette.background.default,
-    width: '100%',
-    padding: theme.spacing.unit * 3,
-    height: 'calc(100% - 56px)',
-    marginTop: 56,
-    [theme.breakpoints.up('sm')]: {
-      height: 'calc(100% - 64px)',
-      marginTop: 64,
-    },
-  },
-  list: {
-    width: 250,
-  },
-  menuButton: {
-    marginLeft: '-10px'
-  }
+  toolbar: theme.mixins.toolbar
 });
 
 injectTapEventPlugin();
 
-const sideList = (
-  <div className={styles.list}>
-    <ListItem button component="a" href="/users">
-      <ListItemText primary="Uzytkownicy" />
-    </ListItem>
-    <ListItem button component="a" href="/projects">
-      <ListItemText primary="Projekty" />
-    </ListItem>
-    <ListItem button component="a" href="/salaries">
-      <ListItemText primary="Wypłaty" />
-    </ListItem>
-  </div>
-)
-
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-          isDrawerOpen: false,
-          anchor: 'left',
-          mobileOpen: false,
-          left: false
-        }
     }
     toggleDrawer = (open) => () => {
       this.setState({
@@ -127,46 +87,35 @@ class App extends Component {
       this.setState({ mobileOpen: !this.state.mobileOpen });
     };
   
-    log = () => {
-      console.log('asd');
-    }
     render() {
       const { classes, theme } = this.props;
-      const { anchor } = this.state;
 
-      const drawer = (
-          <Drawer open={this.state.left} onClose={this.toggleDrawer(false)}>
-            <div
-              tabIndex={0}
-              role="button"
-              onClick={this.toggleDrawer(false)}
-              onKeyDown={this.toggleDrawer(false)}
-              style={{width:'155px'}}
-            >
-            {sideList}
-            </div>
-          </Drawer>
-      )
-  
       return (
         <div>
-          <div className={classes.appFrame}>
-            <AppBar title={<img src="https://unsplash.it/40/40"/>} className={classNames(classes.appBar, classes[`appBar-${anchor}`])}>
+          <div className={classes.root}>
+            <AppBar position="absolute" className={classes.appBar}>
               <Toolbar>
-                <IconButton
-                  color="contrast"
-                  aria-label="open drawer"
-                  className = {classNames(styles.menuButton)}
-                  onClick = {this.toggleDrawer(true)}
-                >
-                  <MenuIcon />
-                </IconButton>
                 <Typography type="title" color="inherit" noWrap>
-                  Surprise.Design
+                 <Button className={classes.button} href='/'> Surprise.Design </Button>
                 </Typography>
               </Toolbar>
             </AppBar>
-            {drawer}
+            
+            <Drawer variant="permanent" className={classes.drawer}>
+            <div className={classes.toolbar} />
+              <ListItem button component="a" href="/users">
+                <ListItemText primary="Uzytkownicy" />
+              </ListItem>
+
+              <ListItem button component="a" href="/projects">
+                <ListItemText primary="Projekty" />
+              </ListItem>
+              
+              <ListItem button component="a" href="/salaries">
+                <ListItemText primary="Wypłaty" />
+              </ListItem>  
+            </Drawer>
+
             <Router>
               <div style={{marginTop:'5%', width:'100%', marginLeft:'0.9%', marginRight:'0.9%'}}>
                 <Route exact path="/" component={Home} />
@@ -180,9 +129,6 @@ class App extends Component {
                 <Route path="/salaries" component={GetSalaries} />
                 <Route path="/addSalaries" component={AddSalaries} />
                 <Route path="/editSalaries/:id" component={EditSalaries} />
-
-                {/* <Route path="/salaries/add" component={AddSalaries} /> */}
-                {/* <Route path="/users/add" component={AddUsers} /> */}
               </div>
             </Router>
 

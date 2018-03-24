@@ -8,6 +8,7 @@ import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
 import { Redirect } from 'react-router-dom';
 import { ListItemText } from 'material-ui/List';
+import { log } from 'util';
 
 const styles = {
   container: {
@@ -107,7 +108,6 @@ class AddSalaries extends React.Component {
     }
 
     let doSomething = () => {
-      console.log(object);
       fetch('https://reactmanagebe.herokuapp.com/api/salaries',
         {
           headers: {

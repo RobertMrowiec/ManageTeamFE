@@ -191,7 +191,7 @@ class GetUserInfo extends Component {
                   return (
                     <TableRow key={i}>
                       <TableCell>{i + 1}</TableCell>
-                      <TableCell>{salary.amount}</TableCell> 
+                      <TableCell>{salary.amount.toFixed(2)} zł</TableCell> 
                       <TableCell>{salary.projectId.name}</TableCell>
                       <TableCell>{salary.date}</TableCell>
                     </TableRow>
