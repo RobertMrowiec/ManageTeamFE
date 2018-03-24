@@ -38,6 +38,7 @@ class GetUsers extends Component {
     this.state = {
       users: [],
       openDialog: false,
+      selectedUser: '',
       userId: ''
     }
   }
@@ -61,7 +62,8 @@ class GetUsers extends Component {
       .then( response => response.json())
       .then( data => this.setState({users: data}))
   }
-  handleOpen = () => {
+  handleOpen = (user) => {
+    this.setState({ selectedUser: user})
     this.setState({ openDialog: true });
   };
 
@@ -116,16 +118,16 @@ class GetUsers extends Component {
                   <TableCell>
 
                     {/* edycja */}
-                    <Button fab mini color="primary" aria-label="add" style={{width:'35px', height:'23px'}} href={'/editUsers/' +`${user._id}`} >
-                      <ModeEditIcon style = {{width:'60%', height:'60%'}}/>
+                    <Button size='small' color="primary" aria-label="add" style={{width:'35px', height:'23px'}} href={'/editUsers/' +`${user._id}`} >
+                      <ModeEditIcon />
                     </Button>
 
                   </TableCell>
                   <TableCell>
 
                     {/* usuwanie  */}
-                    <Button fab mini color="accent" aria-label="add" style={{width:'35px', height:'23px'}} onClick={() => {this.deleteFunction(user)}} >
-                      <DeleteIcon style = {{width:'60%', height:'60%'}}/>
+                    <Button size='small' color="secondary" aria-label="add" style={{width:'35px', height:'23px'}} onClick={() => this.handleOpen(user._id)}>
+                      <DeleteIcon />
                     </Button>
 
                   </TableCell>
@@ -139,13 +141,11 @@ class GetUsers extends Component {
                     <Button onClick={this.handleClose} color="primary">
                       Anuluj
                     </Button>
-                    <Button onClick={(e) => console.log(user)} color="accent" autoFocus>
+                    <Button onClick={() => this.deleteFunction(this.state.selectedUser)} color="secondary" autoFocus>
                       Usuń
                     </Button>
                   </DialogActions>
                 </Dialog>
-
-
                 </TableRow>
               );
             })}
