@@ -44,10 +44,10 @@ class GetUsers extends Component {
   }
 
   deleteFunction (user, e) {
-    fetch('https://reactmanagebe.herokuapp.com/api/users/' + user._id,{
+    fetch('https://reactmanagebe.herokuapp.com/api/users/' + user,{
       method: 'delete'
     }).then(() => {
-      this.setState({users: this.state.users.filter(f => f._id !== user._id)});
+      this.setState({users: this.state.users.filter(f => f._id !== user)});
       this.setState({openDialog: false})
     })
   }
@@ -89,7 +89,7 @@ class GetUsers extends Component {
         </div>
 
         <div style = {{marginLeft: '94%', marginBottom: '0.5%'}}>
-          <Button fab mini color="primary" aria-label="add" className={styles.button} component={Link} to="/addUsers">
+          <Button size='small' color="primary" aria-label="add" className={styles.button} component={Link} to="/addUsers">
             <AddIcon />
           </Button>
         </div>

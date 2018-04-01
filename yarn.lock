@@ -143,6 +143,10 @@ finalhandler@1.1.0:
     statuses "~1.3.1"
     unpipe "~1.0.0"
 
+foreach-promise@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/foreach-promise/-/foreach-promise-0.0.1.tgz#a36d0790abdc48b5403e928fe654d3451ca8f1a3"
+
 forwarded@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"

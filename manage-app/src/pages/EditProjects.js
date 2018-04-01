@@ -181,7 +181,7 @@ class AddProjects extends Component {
           <Button raised color="primary" style={{marginLeft:'unset', marginTop:'10px'}} onClick={Cancel}>
             Cofnij
           </Button>
-          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>
+          <Button raised color="primary" style={{paddingLeft:'8px', marginTop:'10px'}} onClick={Edit}>
             Edytuj
           </Button>
           <Snackbar

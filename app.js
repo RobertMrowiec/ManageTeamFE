@@ -32,6 +32,7 @@ const allowedOrigins = ['http://localhost:3000']
 
 app.use(require('surprise-cors')(allowedOrigins))
 
+app.use('/api/dashboards', require('./routing/dashboards/route'))
 app.use('/api/users', require('./routing/users/route'))
 app.use('/api/projects', require('./routing/projects/route'))
 app.use('/api/salaries', require('./routing/salary/route'))

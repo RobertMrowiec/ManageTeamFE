@@ -84,6 +84,18 @@ class AddProjects extends Component {
       });
     }
 
+    let changeSnackBarToName = () => {
+      this.setState({
+        openErrorName: true,
+      });
+    }
+
+    let changeSnackBarToAmount = () => {
+      this.setState({
+        openErrorAmount: true,
+      });
+    }
+
     let object = {
       name: this.state.name,
       amount: this.state.amount,
@@ -91,6 +103,9 @@ class AddProjects extends Component {
     }
     
     let doSomething = () => {
+      if (!object.name) return changeSnackBarToName()
+      if (!object.amount) return changeSnackBarToAmount()
+
       if (!this.state.tag) {
         object.users = []
       }
@@ -123,6 +138,7 @@ class AddProjects extends Component {
             label="Nazwa projektu"
             placeholder="Np.BPC"
             margin="normal"
+            required='true'
             onChange={this.handleChange('name')}
           />
           
@@ -130,6 +146,7 @@ class AddProjects extends Component {
             id="number"
             label="Kwota"
             type="number"
+            required='true'
             InputLabelProps={{
               shrink: true
             }}
@@ -171,6 +188,18 @@ class AddProjects extends Component {
             message="Bląd podczas dodawania"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
+          />
+
+          <Snackbar
+            open={this.state.openErrorName}
+            message="Nie wpisano nazwy"
+            autoHideDuration={1000}
+          />
+          
+          <Snackbar
+            open={this.state.openErrorAmount}
+            message="Nie wpisano kwoty"
+            autoHideDuration={1000}
           />
       </div>
     )
