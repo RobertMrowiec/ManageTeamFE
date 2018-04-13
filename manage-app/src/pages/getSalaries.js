@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
@@ -12,10 +11,10 @@ import Typography from 'material-ui/Typography';
 import Moment from 'react-moment';
 import Dialog, {
   DialogActions,
-  DialogContent,
-  DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
+import { Redirect } from 'react-router-dom';
+import { CircularProgress } from 'material-ui/Progress';
 
 const styles = theme => ({
   root: {
@@ -47,7 +46,8 @@ class GetSalaries extends Component {
 
   deleteFunction (salary) {
     fetch('https://reactmanagebe.herokuapp.com/api/salaries/' + salary,{
-      method: 'delete'
+      method: 'delete',
+      credentials: 'include'
     }).then(() => {
       this.setState({salaries: this.state.salaries.filter(f => f._id !== salary)});
       this.setState({openDialog: false})
@@ -55,9 +55,14 @@ class GetSalaries extends Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/salaries')
+    fetch('https://reactmanagebe.herokuapp.com/api/salaries', {
+      credentials: 'include'
+    })
       .then( response => response.json())
       .then( data => this.setState({salaries: data}))
+      .catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
+      })
   }
   handleOpen = (salary) => {
     this.setState({ selectedSalary: salary})
@@ -69,8 +74,25 @@ class GetSalaries extends Component {
   };
 
   render () {
-    const {salaries} = this.state;
-      
+    const { salaries } = this.state;
+    const { isLoading } = this.state
+    const { redirectLogin } = this.state
+
+    if (isLoading) {
+      return <CircularProgress style={{
+        'width': '60px',
+        'height': '40px',
+        'margin-left': '44%',
+        'margin-top': '24%'
+      }}/>
+    }
+    
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
+
     return (
       <div>
         <div style={{marginLeft: '-5%', marginBottom: '-2%'}}>
@@ -119,7 +141,7 @@ class GetSalaries extends Component {
                   <TableCell>
 
                     {/* edycja */}
-                    <Button size ='small' color="primary" aria-label="edit" style={{width:'35px', height:'23px'}} onClick={() => this.handleOpen(salary._id)} href={'/editSalaries/' +`${salary._id}`} >
+                    <Button size ='small' color="primary" aria-label="edit" style={{width:'35px', height:'23px'}} href={'/editSalaries/' +`${salary._id}`} >
                       <ModeEditIcon />
                     </Button>
 

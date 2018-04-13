@@ -49,13 +49,16 @@ class AddSalaries extends React.Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/projects')
+    fetch('https://reactmanagebe.herokuapp.com/api/projects', {credentials: 'include'})
       .then( response => response.json())
       .then( projects => this.setState({projects: projects}))
       .then( () => {
-        fetch('https://reactmanagebe.herokuapp.com/api/users')
+        fetch('https://reactmanagebe.herokuapp.com/api/users', {credentials: 'include'})
           .then(response => response.json())
           .then( users => this.setState({users: users}))
+      })
+      .catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
       })
   }
 
@@ -80,7 +83,13 @@ class AddSalaries extends React.Component {
   render() {
 
     const { redirect } = this.state
+    const { redirectLogin } = this.state
 
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
     if (redirect) {
       return (
         <Redirect to={{pathname: '/salaries' }}/>
@@ -124,7 +133,7 @@ class AddSalaries extends React.Component {
       title: this.state.title,
       amount: this.state.amount,
       userId: this.state.userId,
-      projectId: this.state.projectId
+      projectId: this.state.projectId || null
     }
 
     let doSomething = () => {
@@ -141,8 +150,8 @@ class AddSalaries extends React.Component {
         }
       ).then(response => response.json())
       .then(response => {
-          if (response.message == 'No money') return changeSnackBarMoney()
-          else if (response == "Done") return changeSnackBar()
+          if (response.message === 'No money') return changeSnackBarMoney()
+          else if (response === "Done") return changeSnackBar()
           else return changeSnackBarToError()
       })
     }
@@ -205,7 +214,7 @@ class AddSalaries extends React.Component {
           </Select>
         </FormControl>
 
-        <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
+        <Button color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
             Dodaj wypłatę
           </Button>
       

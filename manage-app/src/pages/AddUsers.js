@@ -54,9 +54,12 @@ class AddUser extends React.Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/projects')
+    fetch('https://reactmanagebe.herokuapp.com/api/projects', {credentials: 'include'})
       .then( response => response.json())
       .then( data => this.setState({values: data}))
+      .catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
+      })
   }
 
   handleRequestClose = () => {
@@ -80,7 +83,13 @@ class AddUser extends React.Component {
   render() {
 
     const { redirect } = this.state
+    const { redirectLogin } = this.state
 
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
     if (redirect) {
       return (
         <Redirect to={{pathname: '/users' }}/>
@@ -125,9 +134,15 @@ class AddUser extends React.Component {
     }
 
     let doSomething = () => {
+
+      function validEmail(e) {
+        let filter = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
+        return String(e).search (filter) != -1;
+      }
+
       if (!object.name) return changeSnackBarName()
       if (!object.surname) return changeSnackBarSurname()
-      if (!object.email) return changeSnackBarEmail()
+      if (!object.email || validEmail(object.email) == false ) return changeSnackBarEmail()
       
       let array = Array.from(this.state.tag);
       object.projects = array
@@ -137,6 +152,7 @@ class AddUser extends React.Component {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
+          credentials: 'include',
           method: "POST",
           body: JSON.stringify(object)
         }
@@ -208,7 +224,7 @@ class AddUser extends React.Component {
 
           <Snackbar
             open={this.state.openEmail}
-            message="Nie wpisano emaila"
+            message="Niepoprawny email"
             autoHideDuration={1000}
           />
       </div>

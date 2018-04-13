@@ -3,7 +3,7 @@ import { MenuItem } from 'material-ui/Menu';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import TextField from 'material-ui/TextField'
-import { InputLabel } from 'material-ui/Input';
+import { Input, InputLabel } from 'material-ui/Input';
 import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
 import { Redirect } from 'react-router-dom';
@@ -40,16 +40,40 @@ class EditSalaries extends React.Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/salaries/' + this.props.match.params.id)
+    fetch('https://reactmanagebe.herokuapp.com/api/salaries/' + this.props.match.params.id, {credentials: 'include'})
       .then( response => response.json())
-      .then( data => this.setState({
-        title: data.title,
-        amount: data.amount,
-        userId: data.userId._id,
-        projectId: data.projectId._id,
-        projectName: data.projectId.name,
-        userName: data.userId.name
-      }))
+      .then( data => {
+        if (data.projectId) this.setState({
+          projectId: data.projectId._id,
+          projectName: data.projectId.name
+        })
+
+        this.setState({
+          title: data.title,
+          amount: data.amount,
+          userId: data.userId._id,
+          userName: data.userId.name
+        })
+        
+      }).then(() => {
+        fetch('https://reactmanagebe.herokuapp.com/api/projects', {credentials: 'include'})
+        .then( response => response.json())
+        .then( data => {
+          this.setState({
+            projects: data
+          })
+        })
+      }).then(() => {
+        fetch('https://reactmanagebe.herokuapp.com/api/users', {credentials: 'include'})
+        .then( response => response.json())
+        .then( data => {
+          this.setState({
+            users: data
+          })
+        })
+      }).catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
+      })
   }
 
   
@@ -69,7 +93,13 @@ class EditSalaries extends React.Component {
 
   render(){
     const { redirect } = this.state
-    console.log(this.state)
+    const { redirectLogin } = this.state
+
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
     if (redirect) {
       return (
         <Redirect to={{pathname: '/salaries' }}/>
@@ -92,8 +122,8 @@ class EditSalaries extends React.Component {
     let object = {
       title: this.state.title,
       amount: this.state.amount,
-      projectId: this.state.projectId._id,
-      userId: this.state.userId._id,
+      projectId: this.state.projectId,
+      userId: this.state.userId,
     }
     
     let Edit = () => {
@@ -104,6 +134,7 @@ class EditSalaries extends React.Component {
             'Content-Type': 'application/json'
           },
           method: "PUT",
+          credentials: 'include',
           body: JSON.stringify(object)
         }
       ).then(response => {
@@ -116,9 +147,8 @@ class EditSalaries extends React.Component {
     }
     
     let Cancel = () => {
-     {this.setState({redirect: true})}
+      {this.setState({redirect: true})}
     }
-
     return (
       
       <div style={style.div}>
@@ -142,11 +172,10 @@ class EditSalaries extends React.Component {
           onChange={this.handleChange('amount')}
         />
 
-
         <FormControl  style={{minWidth:166, maxWidth: 166}}>
-          <InputLabel htmlFor="projects-simple">Projects</InputLabel>
+          <InputLabel htmlFor="projects-simple"> Projekt </InputLabel>
           <Select
-            value={this.state.projectName}
+            value={this.state.projectId}
             onChange={this.handleChange('projectId')}
             inputProps={{
               name: 'projects',
@@ -154,19 +183,17 @@ class EditSalaries extends React.Component {
             }}
           >
             {this.state.projects.map(proj => (
-              <MenuItem key = {proj.id} value = {proj._id}>
+              <MenuItem key = {proj._id} value = {proj._id}>
                 <ListItemText primary = {proj.name} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
 
-
-
         <FormControl  style={{minWidth:166, maxWidth: 166}}>
-          <InputLabel htmlFor="users-simple">Users</InputLabel>
+          <InputLabel htmlFor="users-simple"> Odbiorca </InputLabel>
           <Select
-            value={this.state.userName}
+            value={this.state.userId}
             onChange={this.handleChange('userId')}
             inputProps={{
               name: 'users',
@@ -174,15 +201,20 @@ class EditSalaries extends React.Component {
             }}
           >
             {this.state.users.map(user => (
-              <MenuItem key = {user.id} value = {user._id}>
+              <MenuItem key = {user._id} value = {user._id}>
                 <ListItemText primary = {user.name} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
 
-        <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>
-            Edytuj wypłatę
+        <br/>
+
+          <Button color="primary" style={{marginLeft:'unset', marginTop:'10px'}} onClick={Cancel}>
+            Cofnij
+          </Button>
+          <Button color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>
+            Edytuj
           </Button>
 
           <Snackbar
