@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
@@ -9,11 +8,11 @@ import AddIcon from 'material-ui-icons/Add';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import Typography from 'material-ui/Typography';
 import DeleteIcon from 'material-ui-icons/Delete';
+import { Redirect } from 'react-router-dom';
+import { CircularProgress } from 'material-ui/Progress';
 import Dialog, {
   DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+  DialogTitle
 } from 'material-ui/Dialog';
 
 const styles = theme => ({
@@ -39,7 +38,8 @@ class GetProjects extends Component {
 
   deleteFunction (project) {    
     fetch('https://reactmanagebe.herokuapp.com/api/projects/' + project,{
-      method: 'delete'
+      method: 'delete',
+      credentials:'include'
     }).then(() => {
       this.setState({projects: this.state.projects.filter(f => f._id !== project)});
       this.setState({openDialog: false})
@@ -47,9 +47,14 @@ class GetProjects extends Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/projects')
-      .then( response => response.json())
+    fetch('https://reactmanagebe.herokuapp.com/api/projects', {
+      credentials: 'include'
+    }).then( response => response.json())
       .then( data => this.setState({projects: data}))
+      .then( () => this.setState({isLoading: false}))
+      .catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
+      })
   }
   handleOpen = (project) => {
     this.setState({ selectedProject: project})
@@ -61,6 +66,23 @@ class GetProjects extends Component {
   };
 
   render () {
+    const { redirectLogin } = this.state
+    const { isLoading } = this.state
+
+    if (isLoading) {
+      return <CircularProgress style={{
+        'width': '60px',
+        'height': '40px',
+        'margin-left': '44%',
+        'margin-top': '24%'
+      }}/>
+    }
+
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
     const {projects} = this.state;
     return (
       <div>
@@ -129,7 +151,6 @@ class GetProjects extends Component {
                       </Button>
                     </DialogActions>
                   </Dialog>
-                 
 
                 </TableRow>
               );

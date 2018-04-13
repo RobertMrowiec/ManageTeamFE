@@ -49,13 +49,16 @@ class AddSalaries extends React.Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/projects')
+    fetch('https://reactmanagebe.herokuapp.com/api/projects', {credentials: 'include'})
       .then( response => response.json())
       .then( projects => this.setState({projects: projects}))
       .then( () => {
-        fetch('https://reactmanagebe.herokuapp.com/api/users')
+        fetch('https://reactmanagebe.herokuapp.com/api/users', {credentials: 'include'})
           .then(response => response.json())
           .then( users => this.setState({users: users}))
+      })
+      .catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
       })
   }
 
@@ -80,7 +83,13 @@ class AddSalaries extends React.Component {
   render() {
 
     const { redirect } = this.state
+    const { redirectLogin } = this.state
 
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
     if (redirect) {
       return (
         <Redirect to={{pathname: '/salaries' }}/>
@@ -88,10 +97,18 @@ class AddSalaries extends React.Component {
     }
 
     let changeSnackBar = () => {
+      console.log('asd')
       this.setState({
         open: true,
       });
-      setTimeout(() => {this.setState({redirect: true})}, 1000)
+      setTimeout(() => {this.setState({redirect: true})}, 1500)
+    }
+
+    let changeSnackBarMoney = () => {
+      this.setState({
+        openMoneyError: true,
+      });
+      setTimeout(() => {this.setState({redirect: true})}, 1500)
     }
 
     let changeSnackBarToError = () => {
@@ -100,14 +117,28 @@ class AddSalaries extends React.Component {
       });
     }
 
+    let changeSnackBarToAmount = () => {
+      this.setState({
+        openAmountError: true,
+      });
+    }
+
+    let changeSnackBarToUser = () => {
+      this.setState({
+        openUserError: true,
+      });
+    }
+
     let object = {
       title: this.state.title,
       amount: this.state.amount,
       userId: this.state.userId,
-      projectId: this.state.projectId
+      projectId: this.state.projectId || null
     }
 
     let doSomething = () => {
+      if (!object.userId) return changeSnackBarToUser()
+      if (!object.amount) return changeSnackBarToAmount()
       fetch('https://reactmanagebe.herokuapp.com/api/salaries',
         {
           headers: {
@@ -117,13 +148,12 @@ class AddSalaries extends React.Component {
           method: "POST",
           body: JSON.stringify(object)
         }
-      ).then(response => {
-        if (!response.ok){
-          throw Error(response.statusText)
-        }
-        return response
-      }).then(changeSnackBar)
-        .catch(changeSnackBarToError)
+      ).then(response => response.json())
+      .then(response => {
+          if (response.message === 'No money') return changeSnackBarMoney()
+          else if (response === "Done") return changeSnackBar()
+          else return changeSnackBarToError()
+      })
     }
 
     return (
@@ -166,7 +196,6 @@ class AddSalaries extends React.Component {
           </Select>
         </FormControl>
 
-
         <FormControl  style={{minWidth:166, maxWidth: 166}}>
           <InputLabel htmlFor="users-simple"> Odbiorca </InputLabel>
           <Select
@@ -185,7 +214,7 @@ class AddSalaries extends React.Component {
           </Select>
         </FormControl>
 
-        <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
+        <Button color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
             Dodaj wypłatę
           </Button>
       
@@ -199,6 +228,27 @@ class AddSalaries extends React.Component {
           <Snackbar
             open={this.state.openError}
             message="Błąd podczas dodawania"
+            autoHideDuration={2000}
+            onClose={this.handleRequestClose}
+          />
+
+          <Snackbar
+            open={this.state.openAmountError}
+            message="Nie wpisano kwoty"
+            autoHideDuration={1000}
+            onClose={this.handleRequestClose}
+          />
+
+          <Snackbar
+            open={this.state.openUserError}
+            message="Nie wybrano programisty"
+            autoHideDuration={2000}
+            onClose={this.handleRequestClose}
+          />
+
+          <Snackbar
+            open={this.state.openMoneyError}
+            message="Brak pieniędzy w projekcie"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
           />

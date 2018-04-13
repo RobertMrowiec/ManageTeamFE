@@ -13,6 +13,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import { Link } from 'react-router-dom';  
 import Typography from 'material-ui/Typography';
+import { CircularProgress } from 'material-ui/Progress';
 
 const styles = theme => ({
   root: {
@@ -44,10 +45,11 @@ class GetUsers extends Component {
   }
 
   deleteFunction (user, e) {
-    fetch('https://reactmanagebe.herokuapp.com/api/users/' + user._id,{
-      method: 'delete'
+    fetch('https://reactmanagebe.herokuapp.com/api/users/' + user,{
+      method: 'delete',
+      credentials: 'include'
     }).then(() => {
-      this.setState({users: this.state.users.filter(f => f._id !== user._id)});
+      this.setState({users: this.state.users.filter(f => f._id !== user)});
       this.setState({openDialog: false})
     })
   }
@@ -58,9 +60,13 @@ class GetUsers extends Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/users')
+    fetch('https://reactmanagebe.herokuapp.com/api/users', {credentials: 'include'})
       .then( response => response.json())
       .then( data => this.setState({users: data}))
+      .then( () => this.setState({isLoading: false}))
+      .catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
+      })
   }
   handleOpen = (user) => {
     this.setState({ selectedUser: user})
@@ -75,12 +81,29 @@ class GetUsers extends Component {
     
     const { users } = this.state;
     const { redirect } = this.state
+    const { redirectLogin } = this.state
+    const { isLoading } = this.state
 
+    if (isLoading) {
+      return <CircularProgress style={{
+        'width': '60px',
+        'height': '40px',
+        'margin-left': '44%',
+        'margin-top': '24%'
+      }}/>
+    }
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
+    
     if (redirect) {
       return (
         <Redirect to={{pathname: '/userInfo/' + `${this.state.userId}` }}/>
       )
     }
+
 
     return (
       <div>
@@ -89,7 +112,7 @@ class GetUsers extends Component {
         </div>
 
         <div style = {{marginLeft: '94%', marginBottom: '0.5%'}}>
-          <Button fab mini color="primary" aria-label="add" className={styles.button} component={Link} to="/addUsers">
+          <Button size='small' color="primary" aria-label="add" className={styles.button} component={Link} to="/addUsers">
             <AddIcon />
           </Button>
         </div>
@@ -131,24 +154,23 @@ class GetUsers extends Component {
                     </Button>
 
                   </TableCell>
-
-                  <Dialog
-                    open={this.state.openDialog}
-                    onClose={this.handleClose}
-                  >
-                  <DialogTitle>{"Czy na pewno chcesz usunąć tego uzytkownika?"}</DialogTitle>
-                  <DialogActions>
-                    <Button onClick={this.handleClose} color="primary">
-                      Anuluj
-                    </Button>
-                    <Button onClick={() => this.deleteFunction(this.state.selectedUser)} color="secondary" autoFocus>
-                      Usuń
-                    </Button>
-                  </DialogActions>
-                </Dialog>
                 </TableRow>
               );
             })}
+            <Dialog
+              open={this.state.openDialog}
+              onClose={this.handleClose}
+            >
+              <DialogTitle>{"Czy na pewno chcesz usunąć tego uzytkownika?"}</DialogTitle>
+              <DialogActions>
+                <Button onClick={this.handleClose} color="primary">
+                  Anuluj
+                </Button>
+                <Button onClick={() => this.deleteFunction(this.state.selectedUser)} color="secondary" autoFocus>
+                  Usuń
+                </Button>
+              </DialogActions>
+            </Dialog>
           </TableBody>
         </Table>
       </Paper>

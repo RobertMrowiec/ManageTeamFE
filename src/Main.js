@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import classNames from 'classnames';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
-import MenuIcon from 'material-ui-icons/Menu'; 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { ListItem, ListItemText } from 'material-ui/List';
 import {
@@ -25,12 +22,11 @@ import GetUserInfo from './pages/getUserInfo';
 import AddUsers from './pages/AddUsers';
 import EditUsers from './pages/EditUsers';
 import Home from './pages/Home';
+import Login from './pages/Login';
 import GetSalaries from './pages/getSalaries';
 import AddSalaries from './pages/AddSalaries';
 import EditSalaries from './pages/EditSalaries';
 import Button from 'material-ui/Button';
-
-const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
@@ -88,7 +84,7 @@ class App extends Component {
     };
   
     render() {
-      const { classes, theme } = this.props;
+      const { classes } = this.props;
 
       return (
         <div>
@@ -96,7 +92,7 @@ class App extends Component {
             <AppBar position="absolute" className={classes.appBar}>
               <Toolbar>
                 <Typography type="title" color="inherit" noWrap>
-                 <Button className={classes.button} href='/'> Surprise.Design </Button>
+                  <Button className={classes.button} href='/'> Surprise.Design </Button>
                 </Typography>
               </Toolbar>
             </AppBar>
@@ -119,6 +115,7 @@ class App extends Component {
             <Router>
               <div style={{marginTop:'5%', width:'100%', marginLeft:'0.9%', marginRight:'0.9%'}}>
                 <Route exact path="/" component={Home} />
+                <Route path="/login" component={Login} />
                 <Route path="/projects" component={GetProjects} />
                 <Route path="/addProjects" component={AddProjects} />
                 <Route path="/editProjects/:id" component={EditProjects} />

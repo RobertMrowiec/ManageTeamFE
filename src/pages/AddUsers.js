@@ -54,9 +54,12 @@ class AddUser extends React.Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/projects')
+    fetch('https://reactmanagebe.herokuapp.com/api/projects', {credentials: 'include'})
       .then( response => response.json())
       .then( data => this.setState({values: data}))
+      .catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
+      })
   }
 
   handleRequestClose = () => {
@@ -80,7 +83,13 @@ class AddUser extends React.Component {
   render() {
 
     const { redirect } = this.state
+    const { redirectLogin } = this.state
 
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
     if (redirect) {
       return (
         <Redirect to={{pathname: '/users' }}/>
@@ -100,6 +109,24 @@ class AddUser extends React.Component {
       });
     }
 
+    let changeSnackBarName = () => {
+      this.setState({
+        openName: true,
+      });
+    }
+
+    let changeSnackBarSurname = () => {
+      this.setState({
+        openSurname: true,
+      });
+    }
+
+    let changeSnackBarEmail = () => {
+      this.setState({
+        openEmail: true,
+      });
+    }
+
     let object = {
       name: this.state.name,
       surname: this.state.surname,
@@ -107,6 +134,16 @@ class AddUser extends React.Component {
     }
 
     let doSomething = () => {
+
+      function validEmail(e) {
+        let filter = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
+        return String(e).search (filter) != -1;
+      }
+
+      if (!object.name) return changeSnackBarName()
+      if (!object.surname) return changeSnackBarSurname()
+      if (!object.email || validEmail(object.email) == false ) return changeSnackBarEmail()
+      
       let array = Array.from(this.state.tag);
       object.projects = array
       fetch('https://reactmanagebe.herokuapp.com/api/users',
@@ -115,6 +152,7 @@ class AddUser extends React.Component {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
+          credentials: 'include',
           method: "POST",
           body: JSON.stringify(object)
         }
@@ -133,6 +171,7 @@ class AddUser extends React.Component {
           id="name"
           label="Imie"
           placeholder="Np. Jan"
+          required='true'
           margin="normal"
           onChange={this.handleChange('name')}
         />
@@ -140,18 +179,20 @@ class AddUser extends React.Component {
           id="surname"
           label="Nazwisko"
           placeholder="Np. Kowalski"
+          required='true'
           margin="normal"
           onChange={this.handleChange('surname')}
         />
         <TextField
           id="email"
           label="Email"
+          required='true'
           placeholder="Np. kowalski@gmail.com"
           margin="normal"
           onChange={this.handleChange('email')}
         />
 
-        <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
+        <Button color="primary" style={{paddingLeft:'8px', marginTop:'10px'}} onClick={doSomething}>
             Dodaj uzytkownika
           </Button>
       
@@ -164,9 +205,27 @@ class AddUser extends React.Component {
 
           <Snackbar
             open={this.state.openError}
-            message="Błąd podczas dodawania"
+            message="Błąd serwera"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
+          />
+
+          <Snackbar
+            open={this.state.openName}
+            message="Nie wpisano imienia"
+            autoHideDuration={1000}
+          />
+          
+          <Snackbar
+            open={this.state.openSurname}
+            message="Nie wpisano nazwiska"
+            autoHideDuration={1000}
+          />
+
+          <Snackbar
+            open={this.state.openEmail}
+            message="Niepoprawny email"
+            autoHideDuration={1000}
           />
       </div>
     );

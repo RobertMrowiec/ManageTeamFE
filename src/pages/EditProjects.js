@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/Menu/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { FormControl } from 'material-ui/Form';
 import Input, { InputLabel } from 'material-ui/Input';
 import { ListItemText } from 'material-ui/List';
@@ -26,13 +24,6 @@ const style = {
   }
 }
 
-const divStyleforText = {
-  width: '100%',
-  margin: 'auto',
-  maxWidth: 500
-};
-
-
 class AddProjects extends Component {
   constructor(props) {
     super(props);
@@ -48,15 +39,19 @@ class AddProjects extends Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/projects/' + this.props.match.params.id)
+    fetch('https://reactmanagebe.herokuapp.com/api/projects/' + this.props.match.params.id, {credentials: 'include'})
       .then( response => response.json())
       .then( data => this.setState({
         name: data.name,
-        amount: data.amount
+        amount: String(data.amount),
+        tag: new Set(data.users)
       })).then(() => {
-        fetch('https://reactmanagebe.herokuapp.com/api/users')
+        fetch('https://reactmanagebe.herokuapp.com/api/users', {credentials: 'include'})
         .then( response => response.json())
         .then( data => this.setState({values: data}))
+      })
+      .catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
       })
   }
 
@@ -80,7 +75,13 @@ class AddProjects extends Component {
 
   render(){
     const { redirect } = this.state
+    const { redirectLogin } = this.state
 
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
     if (redirect) {
       return (
         <Redirect to={{pathname: '/projects' }}/>
@@ -115,6 +116,7 @@ class AddProjects extends Component {
             'Content-Type': 'application/json'
           },
           method: "PUT",
+          credentials: 'include',
           body: JSON.stringify(object)
         }
       ).then(response => {
@@ -127,7 +129,7 @@ class AddProjects extends Component {
     }
     
     let Cancel = () => {
-     {this.setState({redirect: true})}
+      {this.setState({redirect: true})}
     }
 
     return (
@@ -138,7 +140,7 @@ class AddProjects extends Component {
         </div>
 
         <div style={style.div}>
-         
+        
           <TextField
             id="name"
             label= 'Nazwa projektu'
@@ -158,7 +160,6 @@ class AddProjects extends Component {
             margin="normal"
             onChange={this.handleChange('amount')}
           />
-          
 
           <FormControl style={{minWidth:166, maxWidth: 166}}>
             <InputLabel htmlFor="tag-multiple">Uzytkownicy</InputLabel>
@@ -177,11 +178,12 @@ class AddProjects extends Component {
               ))}
             </Select>
           </FormControl>
+          <br />
 
-          <Button raised color="primary" style={{marginLeft:'unset', marginTop:'10px'}} onClick={Cancel}>
+          <Button color="primary" style={{marginLeft:'unset', marginTop:'10px'}} onClick={Cancel}>
             Cofnij
           </Button>
-          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>
+          <Button color="primary" style={{paddingLeft:'8px', marginTop:'10px'}} onClick={Edit}>
             Edytuj
           </Button>
           <Snackbar

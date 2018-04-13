@@ -5,14 +5,10 @@ import Checkbox from 'material-ui/Checkbox';
 import { ListItemText } from 'material-ui/List';
 import Select from 'material-ui/Select';
 import Input, { InputLabel } from 'material-ui/Input';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/Menu/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
-import { Link, Redirect } from 'react-router-dom';
-import { log } from 'util';
-import Typography from 'material-ui/Typography';
+import { Redirect } from 'react-router-dom';
 
 const style = {
   div: {
@@ -40,9 +36,12 @@ class AddProjects extends Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/users')
+    fetch('https://reactmanagebe.herokuapp.com/api/users', {credentials: 'include'})
       .then( response => response.json())
       .then( data => this.setState({values: data}))
+      .catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
+      })
   }
 
   handleRequestClose = () => {
@@ -64,7 +63,13 @@ class AddProjects extends Component {
 
   render(){
     const { redirect } = this.state
+    const { redirectLogin } = this.state
 
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
     if (redirect) {
       return (
         <Redirect to={{pathname: '/projects' }}/>
@@ -84,6 +89,18 @@ class AddProjects extends Component {
       });
     }
 
+    let changeSnackBarToName = () => {
+      this.setState({
+        openErrorName: true,
+      });
+    }
+
+    let changeSnackBarToAmount = () => {
+      this.setState({
+        openErrorAmount: true,
+      });
+    }
+
     let object = {
       name: this.state.name,
       amount: this.state.amount,
@@ -91,10 +108,14 @@ class AddProjects extends Component {
     }
     
     let doSomething = () => {
+      if (!object.name) return changeSnackBarToName()
+      if (!object.amount) return changeSnackBarToAmount()
+
       if (!this.state.tag) {
         object.users = []
       }
       else {
+        console.log(this.state.tag)
         let array = Array.from(this.state.tag);
         object.users = array
       }
@@ -105,6 +126,7 @@ class AddProjects extends Component {
             'Content-Type': 'application/json'
           },
           method: "POST",
+          credentials: 'include',
           body: JSON.stringify(object)
         }
       ).then(response => {
@@ -123,6 +145,7 @@ class AddProjects extends Component {
             label="Nazwa projektu"
             placeholder="Np.BPC"
             margin="normal"
+            required={true}
             onChange={this.handleChange('name')}
           />
           
@@ -155,7 +178,7 @@ class AddProjects extends Component {
           </Select>
         </FormControl>
 
-          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
+          <Button color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={doSomething}>
             Dodaj projekt
           </Button>
       
@@ -171,6 +194,18 @@ class AddProjects extends Component {
             message="Bląd podczas dodawania"
             autoHideDuration={2000}
             onClose={this.handleRequestClose}
+          />
+
+          <Snackbar
+            open={this.state.openErrorName}
+            message="Nie wpisano nazwy"
+            autoHideDuration={1000}
+          />
+          
+          <Snackbar
+            open={this.state.openErrorAmount}
+            message="Nie wpisano kwoty"
+            autoHideDuration={1000}
           />
       </div>
     )

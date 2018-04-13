@@ -31,8 +31,6 @@ const styles = {
   }
 };
 
-const tab = ['asd']
-
 class EditUser extends React.Component {
   constructor(props) {
     super(props);
@@ -48,7 +46,7 @@ class EditUser extends React.Component {
   }
 
   componentDidMount() {
-    fetch('https://reactmanagebe.herokuapp.com/api/users/' + this.props.match.params.id)
+    fetch('https://reactmanagebe.herokuapp.com/api/users/' + this.props.match.params.id, {credentials: 'include'})
       .then( response => response.json())
       .then( data => this.setState({
         name: data.name,
@@ -57,9 +55,12 @@ class EditUser extends React.Component {
         projects: data.projects
       }))
       .then(() => {
-        fetch('https://reactmanagebe.herokuapp.com/api/projects')
+        fetch('https://reactmanagebe.herokuapp.com/api/projects', {credentials: 'include'})
           .then( response => response.json())
           .then( projectData => this.setState({values: projectData}))
+      })
+      .catch(err => {
+        if (err == 'TypeError: Failed to fetch') return this.setState({redirectLogin: true})
       })
   }
 
@@ -93,7 +94,13 @@ class EditUser extends React.Component {
   render() {
 
     const { redirect } = this.state
+    const { redirectLogin } = this.state
 
+    if (redirectLogin) {
+      return (
+        <Redirect to={{pathname: '/login' }}/>
+      )
+    }
     if (redirect) {
       return (
         <Redirect to={{pathname: '/users' }}/>
@@ -128,6 +135,7 @@ class EditUser extends React.Component {
             'Content-Type': 'application/json'
           },
           method: "PUT",
+          credentials: 'include',
           body: JSON.stringify(object)
         }
       ).then(response => {
@@ -140,7 +148,7 @@ class EditUser extends React.Component {
     }
     
     let Cancel = () => {
-     {this.setState({redirect: true})}
+      {this.setState({redirect: true})}
     }
     
     let doSomething = () => {
@@ -152,6 +160,7 @@ class EditUser extends React.Component {
             'Content-Type': 'application/json'
           },
           method: "POST",
+          credentials: 'include',
           body: JSON.stringify(object)
         }
       ).then(response => {
@@ -188,32 +197,11 @@ class EditUser extends React.Component {
           margin="normal"
           onChange={this.handleChange('email')}
         />
-
-        <FormControl style={styles.formControl}>
-
-        <InputLabel htmlFor="name-multiple">Projekty</InputLabel>
-          <Select
-            multiple
-            value={this.state.projects}
-            onChange={this.handleProjectChange}
-            input={<Input id="name-multiple"/>}
-            style={{maxWidth:"200px", minWidth: "200px"}}
-          >
-            {this.state.values.map(value => (
-              <MenuItem
-                key={value.name}
-                value={value._id}
-              >
-                {value.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-          
-          <Button raised color="primary" style={{marginLeft:'unset', marginTop:'10px'}} onClick={Cancel}>
+          <br />
+          <Button color="primary" style={{marginLeft:'unset', marginTop:'10px'}} onClick={Cancel}>
             Cofnij
           </Button>
-          <Button raised color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>
+          <Button color="primary" style={{marginLeft:'4.7%', marginTop:'10px'}} onClick={Edit}>
             Edytuj
           </Button>
 
